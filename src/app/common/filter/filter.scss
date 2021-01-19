@@ -1,0 +1,22 @@
+@import "../../containers/variables.scss";
+@import "../../containers/flex.scss";
+.filterList {
+  @include column;
+  width: 100%;
+  padding: 0.5rem 1.5rem;
+  box-shadow: 0 0 5px 2px $fieldBorder;
+  > li {
+    padding: 1rem 0;
+    color: $mediumTextColor;
+    cursor: pointer;
+    &:not(:last-child) {
+      border-bottom: 1px solid $fieldBorder;
+    }
+    &.addItem {
+      color: $themeInfoColor;
+    }
+    &:hover {
+      color: $darkTextColor;
+    }
+  }
+}

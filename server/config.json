@@ -1,0 +1,5 @@
+{
+  "mongodbConnection": "mongodb+srv://water:meter@cluster0.ivv6y.mongodb.net/watermeter?retryWrites=true&w=majority",  
+  "ACCESS_TOKEN": "76c988476b390b1a249cf2cc4c6408e4c01fb53c48cd7abbb32d738875da8356e9dbfc69ee512d6204d4991914672b697f088bacf08a940d5c172cd36693e23e",
+  "REDIS_TTL": 86400
+}

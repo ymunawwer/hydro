@@ -1,0 +1,120 @@
+//Color codes (Repeated colors need to be removed, used first one only)
+$primaryColorDarkBlue: #2a345e; //
+$primaryColorOrange: #eb8b2d;
+$themeSuccessColor: #28cc97;
+$themeErrorColor: #ff4766;
+$themeInfoColor: #5090f8;
+$themeWarningColor: #ffde4d;
+$lightGreyColor: #c4c9d2;
+$fieldBorder: #dbe1e9;
+$bodyBgColor: #f3f5fd;
+$navBgColor: #f8fcfd;
+$panelBgColor: #ffffff;
+$borderColor: #bfc7d0;
+$darkTextColor: #000001;
+$mediumTextColor: #384150;
+$lightTextColor: #8994a5;
+$themeMediumColor: #395293;
+$greyColor: #444444;
+$orangeColor: #eb8b2e;
+$aeroBlue: #c8ffe0;
+$lightPeriwinkle: #ffc6c6;
+
+//FontNames
+$fontMedium: "Avenir-Medium";
+$fontRoman: "Avenir-Roman";
+$fontHeavy: "Avenir-Heavy";
+
+$fontArMedium: "Almarai-Regular";
+$fontArRoman: "Almarai-Light";
+$fontArHeavy: "Almarai-Bold";
+
+@mixin fontMedium {
+  font-family: $fontMedium;
+  [dir="rtl"] & {
+    font-family: $fontArMedium;
+  }
+}
+
+@mixin fontRoman {
+  font-family: $fontRoman;
+  [dir="rtl"] & {
+    font-family: $fontArRoman;
+  }
+}
+
+@mixin fontHeavy {
+  font-family: $fontHeavy;
+  [dir="rtl"] & {
+    font-family: $fontArHeavy;
+  }
+}
+
+$fieldBorderRadius: 0.25rem;
+
+$scut-rem-base: 16 !default; // default 16px size
+
+$timeUnits: s !default; // s stands for seconds
+
+//Mixins
+@mixin panel {
+  background-color: $panelBgColor;
+  border: 1px solid $borderColor;
+  padding: 30px;
+}
+
+@mixin formField {
+  border: 1px solid $fieldBorder;
+  padding: 0.86rem;
+  border-radius: $fieldBorderRadius;
+  min-height: 2.5rem;
+  font-family: $fontRoman;
+}
+
+//(rotate(0deg), scale(1))
+@mixin rotate($rotate, $scale) {
+  -webkit-transform: rotate($rotate) scale($scale);
+  -ms-transform: rotate($rotate) scale($scale);
+  transform: rotate($rotate) scale($scale);
+}
+
+//@button( background-color, color, padding, font-size)
+@mixin button($bgColor, $color, $padding, $fontsize) {
+  padding: $padding;
+  font-size: $fontsize;
+  display: inline-block;
+  border-radius: $fieldBorderRadius;
+  background-color: $bgColor;
+  color: $color;
+  line-height: 1.5;
+  border: 0;
+  transition: 0.5s all ease;
+}
+
+@mixin mainContent() {
+  flex: 1;
+  box-shadow: 0 0px 0px 0px $borderColor, 0 0px 0px 0px $borderColor,
+    6px 0 12px -20px rgba(191, 199, 208, 0.55),
+    -6px 0 15px -15px rgba(191, 199, 208, 0.55);
+  min-height: calc(100vh - 35vh);
+}
+
+@mixin transition($time) {
+  -webkit-transition: $time + $timeUnits;
+  transition: $time + $timeUnits;
+  -moz-transition: $time + $timeUnits;
+}
+
+@function scut-strip-unit($num) {
+  @return $num / ($num * 0 + 1);
+}
+
+@function scut-rem($pixels) {
+  @return scut-strip-unit($pixels) / $scut-rem-base * 1rem;
+}
+
+@mixin fontSize($size) {
+  @if $size != null {
+    font-size: scut-rem($size);
+  }
+}

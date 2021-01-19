@@ -1,0 +1,6 @@
+{
+  "login": "/api/login",
+  "logOutApi": "/api/logout",
+  "getReqTickets": "/api/getReqTickets",
+  "getMeterReadings": "/api/getMeterReadings"
+}

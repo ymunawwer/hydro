@@ -1,0 +1,52 @@
+@import "../../containers/variables.scss";
+@import "../../containers/flex.scss";
+.sideNavWrapper {
+  flex: 0 0 19%;
+  .sideNavBar {
+    > ul {
+      > li {
+        display: block;
+        > a {
+          display: block;
+          font-size: 1.125rem;
+          color: #384150;
+          line-height: 1;
+          padding: 1rem 0;
+          @include transition(0.3);
+          &:hover {
+            color: $primaryColorOrange;
+          }
+          &.activeSideNav {
+            @include fontHeavy;
+            color: $primaryColorOrange;
+          }
+        }
+        > ul {
+          > li {
+            display: block;
+            > a {
+              display: block;
+              color: #384150;
+              font-size: 1rem;
+              @include fontRoman;
+              padding: 12px 20px;
+              @include transition(0.5);
+              &.activeSubMenu {
+                background-color: $themeInfoColor;
+                color: $panelBgColor;
+                &:hover {
+                  background-color: $themeInfoColor;
+                  color: $panelBgColor;
+                }
+              }
+              &:hover {
+                background-color: #dce9fe;
+                color: $mediumTextColor;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

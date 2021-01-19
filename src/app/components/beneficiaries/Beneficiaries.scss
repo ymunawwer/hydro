@@ -1,0 +1,143 @@
+@import "../../containers/variables.scss";
+
+.circle {
+  background: darkgrey;
+  width: 24px;
+  height: 24px;
+  border-radius: 55%;
+  display: inline-block;
+  text-align: center;
+  margin: 2px;
+  padding: 4px;
+  line-height: 1.2;
+}
+
+.countModal {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: auto;
+  grid-gap: 9px;
+}
+.box {
+  width: 165px;
+  height: 92px;
+  padding: 30px;
+  background-color: #dbe1e9;
+  margin: 20px;
+}
+.totalItems {
+  width: 58px;
+  height: 26px;
+  font-family: Avenir;
+  font-size: 26px;
+  font-weight: 300;
+  text-align: center;
+}
+
+.logoWrapper {
+  text-align: center;
+  padding-bottom: 1em;
+}
+.left {
+  float: right;
+}
+.blueText {
+  color: lightseagreen;
+}
+.close {
+  float: right;
+  cursor: pointer;
+  font-size: 23px;
+  font-weight: bold;
+}
+
+.allUserProfileWrapper {
+  display: flex;
+  //margin-top: 1.2em;
+  @include fontRoman;
+}
+.row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: auto;
+  grid-gap: 16px;
+}
+
+.beneficiaryPopup {
+  padding-top: 40px;
+  h3 {
+    font-size: 1.6rem;
+    margin: 0px 40px 24px;
+    @include fontHeavy;
+    text-transform: capitalize;
+    > span {
+      float: right;
+      color: $lightTextColor;
+    }
+  }
+  .createBeneficiaryMain {
+    padding: 25px 45px 10px;
+    max-height: 70vh;
+    overflow: auto;
+  }
+  .createPaymentBtn {
+    padding-left: 44px;
+    padding-right: 61px;
+  }
+}
+
+.beneficiaryPopup .popTitle {
+  padding: 0 0;
+}
+.clsBtn {
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: #8994a5;
+  text-decoration: none;
+  padding: 2rem 0;
+}
+
+//Mixin for header padding and close icon
+@mixin common-payment {
+  padding: 40px;
+  @include fontMedium;
+  h3 {
+    font-size: 1.6rem;
+    margin: 0px 0px 26px;
+    @include fontHeavy;
+    & > span {
+      float: right;
+      color: $lightTextColor;
+    }
+  }
+  h4 {
+    color: $lightTextColor;
+    line-height: 1.29;
+  }
+}
+
+.commentBeneficiries {
+  @include common-payment;
+  display: flex;
+  flex-direction: column;
+  .btn-info {
+    color: $panelBgColor;
+    background-color: $themeInfoColor;
+    border: none;
+    margin: 20px 0px 10px;
+  }
+  .btn-reject {
+    @extend .btn-info;
+    background-color: $themeErrorColor;
+  }
+  .btn-approve {
+    @extend .btn-info;
+    background-color: $themeSuccessColor;
+  }
+}
+.IbanFieldWidth {
+  width: 54%;
+}

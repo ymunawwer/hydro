@@ -1,0 +1,51 @@
+@import "./../../../containers/variables";
+
+.transactionOverview {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  align-content: center;
+  text-align: center;
+  background-color: #f3f5fd;
+  padding: 11px 11px;
+  @include fontRoman;
+  margin-right: 13px;
+  margin-bottom: 24px;
+  max-width: 180px;
+  height: 88px;
+  width: 180px;
+  &.viewMoreLess {
+    max-width: 80px;
+    justify-content: center;
+    cursor: pointer;
+    > .label {
+      color: #5090f8;
+      @include fontRoman;
+      font-size: 16px;
+      text-transform: initial;
+      margin-bottom: 0;
+    }
+  }
+  &.fullBox {
+    flex: 1;
+    margin-right: 0;
+    width: auto;
+    max-width: none;
+  }
+  .label {
+    color: #8994a5;
+    text-transform: uppercase;
+  }
+  .amount {
+    @include fontMedium;
+    @include fontSize(22);
+    &.debited {
+      margin-left: 20px;
+      color: $themeErrorColor;
+    }
+    &.credited {
+      color: $themeSuccessColor;
+    }
+  }
+}

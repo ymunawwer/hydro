@@ -1,0 +1,42 @@
+@import "../../containers/variables.scss";
+@import "../../containers/flex.scss";
+.topNav {
+  ul {
+    > li {
+      margin-right: 2rem;
+      a {
+        @include fontMedium;
+        color: $darkTextColor;
+        padding: 2.2rem 0;
+        text-transform: uppercase;
+        font-weight: 400;
+        position: relative;
+        display: inline-block;
+        transition: 0.5s ease all;
+        &.active {
+          @include fontHeavy;
+        }
+        &:after {
+          content: "";
+          position: absolute;
+          left: 0;
+          bottom: 0;
+          height: 3px;
+          width: 0;
+          background-color: $primaryColorOrange;
+          transition: 0.5s ease all;
+        }
+        &:hover,
+        &.active {
+          &:after {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}
+
+.topNavContainer {
+  margin-top: 68px !important;
+}

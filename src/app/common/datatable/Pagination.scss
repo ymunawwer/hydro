@@ -1,0 +1,165 @@
+@import "../../containers/variables.scss";
+.icon-Edit {
+  color: $themeInfoColor;
+  font-size: 15px;
+}
+.icon-trash {
+  color: $themeErrorColor;
+}
+.errorimage {
+  height: 170px;
+  width: 170px;
+  margin: 10px;
+}
+.activeClick {
+  background-color: red;
+  color: blue;
+}
+.circle {
+  background: darkgrey;
+  width: 24px;
+  height: 24px;
+  border-radius: 55%;
+  display: inline-block;
+  text-align: center;
+  margin: 5px;
+}
+.disabledClass {
+  pointer-events: none !important;
+}
+.reviewed {
+  color: lightgreen;
+}
+.errormessage {
+  text-align: center;
+  padding: 20px;
+  margin: 100px auto 0;
+  max-width: 326px;
+}
+
+.No-records-found {
+  width: 127px;
+  height: 22px;
+  @include fontRoman;
+  font-size: 16px;
+  letter-spacing: normal;
+  color: lightgray;
+  margin: 10px;
+  padding: 10px;
+}
+.Table__pagination {
+  .btn-link {
+    display: inline-block;
+    padding: 0.2rem 0.4rem;
+    font-size: 1rem;
+    border: 1px solid transparent;
+    border-radius: $fieldBorderRadius;
+    @include fontMedium;
+    &:hover {
+      text-decoration: none;
+      border-color: $fieldBorder;
+    }
+    &:disabled {
+      cursor: not-allowed;
+      color: $lightTextColor;
+      &:hover {
+        text-decoration: none;
+      }
+    }
+    &.Table__pageButton--active {
+      color: $darkTextColor;
+      @include fontHeavy;
+    }
+  }
+  .label {
+    display: inline-block;
+    color: $lightTextColor;
+    vertical-align: baseline;
+    @include fontRoman;
+    font-size: 1rem;
+  }
+}
+
+.dataTable .ReactTable .rt-table .rt-thead.-filters {
+  background-color: #2a345e;
+}
+
+.dataTable .ReactTable .rt-th,
+.dataTable .ReactTable .rt-td {
+  white-space: initial;
+}
+
+.dataTable .ReactTable .rt-table .rt-tr-group .rt-tr.-even:hover {
+  background-color: #f3f5fd;
+}
+
+.dataTable .ReactTable .rt-table .rt-tr-group .rt-tr.-odd:hover {
+  background-color: #fff;
+}
+
+.dataTable .ReactTable .rt-th,
+.dataTable .ReactTable .rt-td {
+  white-space: normal;
+  margin-top: 3px;
+}
+.dataTable .rt-thead .tableHeader > div {
+  text-align: left;
+  @include fontMedium;
+}
+
+.paymentsTable .rt-thead .tableHeader:first-child > div:first-child,
+.paymentsTable .ReactTable .rt-tbody .rt-tr-group .rt-tr .rt-td:first-child,
+.beneficiaryTable .ReactTable .rt-tbody .rt-tr-group .rt-tr .rt-td:first-child {
+  text-align: left;
+  text-overflow: ellipsis;
+}
+
+.paymentsTable
+  .ReactTable
+  .rt-tbody
+  .rt-tr-group
+  .rt-tr
+  .rt-td:first-child
+  > input,
+.paymentsTable .rt-thead .tableHeader:first-child > div:first-child > input {
+  margin-right: 0;
+}
+
+.TransactionTable .ReactTable .rt-table .rt-thead .tableHeader,
+.beneficiaryTable .ReactTable .rt-table .rt-thead .tableHeader {
+  padding: 12px 10px 12px 10px !important;
+}
+
+.TransactionTable .ReactTable .rt-table .rt-tr-group .rt-tr .rt-td {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dataTable .ReactTable .rt-table .rt-thead .tableHeader {
+  padding: 12px 10px 12px 10px;
+  font-size: 1rem;
+  text-align: left;
+  border-right: 0;
+  align-self: baseline;
+}
+
+.dataTable .ReactTable .rt-td:nth-child(1) {
+  text-overflow: inherit;
+}
+
+.ReactTable .rt-table .rt-tr-group .rt-tr.activeClick:hover {
+  background-color: #ffdbe9 !important;
+}
+
+.ReactTable .rt-table .rt-tr-group .rt-tr.activeClick .rt-td {
+  text-decoration: line-through;
+}
+
+.ReactTable .rt-table .rt-tr-group .rt-tr.activeClick .rt-td:last-child {
+  text-decoration: none;
+}
+
+.ReactTable .rt-thead .rt-th.-sort-asc,
+.ReactTable .rt-thead .rt-th.-sort-desc {
+  box-shadow: none !important;
+}

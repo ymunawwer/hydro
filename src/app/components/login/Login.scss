@@ -1,0 +1,48 @@
+.head_bar {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  z-index: 1;
+  display: flex;
+  width: 100vw;
+  top: 2rem;
+  /* background-image: url(/img/group_bar.816c07cc.svg); */
+  background-size: contain;
+  height: fit-content;
+}
+.wave_back {
+  position: absolute;
+  width: 100vw;
+  z-index: 1;
+  top: 0;
+  /* height:12rem; */
+}
+.login {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  justify-content: space-evenly;
+}
+.side_logo {
+  margin-top: 8rem;
+  width: 25rem;
+  z-index: 1;
+}
+.wallpaper {
+  height: 100vh;
+  width: 100vw;
+  position: absolute;
+}
+.image_wrapper {
+  margin: 0 2rem;
+  position: relative;
+  z-index: 1;
+}
+.image_wrapper > img {
+  width: 8rem;
+}
+.login_card {
+  margin-top: 7rem;
+}

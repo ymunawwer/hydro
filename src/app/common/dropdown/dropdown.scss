@@ -1,0 +1,86 @@
+@import "./../../containers/variables";
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown .list {
+  position: absolute;
+  z-index: 9;
+  background: #fff;
+  width: 200px;
+  @include fontRoman;
+  top: 45px;
+}
+
+.dropdown .list li {
+  padding: 12px 8px;
+  border-bottom: 1px solid #dbe1e9;
+  margin: 0 10px;
+  display: block;
+  cursor: pointer;
+}
+
+.mainSelection {
+  border: 1px solid #c4c9d2;
+  max-width: 208px;
+  padding: 12px 15px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  display: block;
+  position: relative;
+  font-size: 1rem;
+  cursor: pointer;
+  @include fontMedium;
+}
+
+.dropdown.open {
+  .mainSelection {
+    border: 1px solid $themeInfoColor;
+    color: $themeInfoColor;
+  }
+  .icon::before {
+    color: $themeInfoColor;
+  }
+}
+
+.mainSelection > .icon {
+  position: absolute;
+  right: 11px;
+  font-size: 16px;
+}
+
+.statements {
+  display: inline-block;
+  float: left;
+}
+
+.dropdown .icon-down-arrow {
+  @include transition(0.5);
+}
+
+.statements .dropdown {
+  position: relative;
+  float: left;
+  width: 42.5%;
+  margin-right: 7px;
+}
+
+.open .icon-down-arrow {
+  @include rotate(180deg, 1);
+}
+
+.dropdown.calendar {
+  width: 8%;
+}
+
+.dropdown.calendar > .mainSelection {
+  height: 40px;
+  width: 40px;
+}
+.dropdown.calendar .mainSelection .icon {
+  font-size: 24px;
+  left: 7px;
+  top: 7px;
+  color: $lightTextColor;
+}
