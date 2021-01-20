@@ -1,8 +1,8 @@
 const express = require("express");
 var session = require("express-session");
-var redis = require("redis");
-var redisStore = require("connect-redis")(session);
-var redisClient = redis.createClient();
+//var redis = require("redis");
+//var redisStore = require("connect-redis")(session);
+//var redisClient = redis.createClient();
 const mongoose = require("mongoose");
 const favicon = require("serve-favicon");
 const bodyParser = require("body-parser");
@@ -38,9 +38,9 @@ let db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
 db.once("open", function callback() {
   console.log("db connected...!");
-  app.use(
+ /* app.use(
     session({
-      secret: "OSVREDIS",
+      secret: "secret",
       name: "_redisPractice",
       resave: true,
       saveUninitialized: true,
@@ -52,7 +52,7 @@ db.once("open", function callback() {
         ttl: process.env.REDIS_TTL,
       }),
     })
-  );
+  );*/
   app.use("/api", require("./routes/index"));
 });
 db.on("disconnected", function() {
@@ -62,14 +62,7 @@ db.on("disconnected", function() {
 app.use(
   cors({
     origin: [
-      "http://95.177.175.225:3005",
-      "http://95.177.175.225",
-      "http://uat.onesingleview.com",
-      "http://uat.onesingleview.com:3005",
-      "https://95.177.175.225:3005",
-      "https://95.177.175.225",
-      "https://uat.onesingleview.com",
-      "https://uat.onesingleview.com:3005",
+      "http://hydroid.com:3005",
       "http://localhost:3000",
     ], //frontend server localhost:3005
     methods: ["GET", "POST", "PUT", "DELETE"],

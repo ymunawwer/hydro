@@ -1,17 +1,19 @@
 const jwt = require("jsonwebtoken");
 const cryptoLib = require("cryptlib");
 const shaKey = cryptoLib.getHashSha256(process.env.APP_KEY, 32);
-const redis = require("redis");
-const redisClient = redis.createClient();
+//const redis = require("redis");
+//const redisClient = redis.createClient();
 const { base64encode } = require("nodejs-base64");
 const crypto = require("crypto");
 
+/*
 redisClient.on("error", function(err) {
   console.log("could not establish a connection with redis. " + err);
 });
 redisClient.on("connect", function(err) {
   console.log("connected to redis successfully");
 });
+*/
 
 exports.generateJWTToken = async (user, expiresIn) => {
   try {
