@@ -4,10 +4,6 @@ import history from "../../history";
 import api from "../../api.json";
 import endpoint from "../../apiUtil";
 import axiosInterceptor from "./axiosInterceptor";
-import { grantModuleAccess, grantCategoryAccess } from "../../utils/roleHelper";
-import { getAuditData } from "../../utils/roleHelper";
-import * as Cookies from "js-cookie";
-const cryptoLib = require("cryptlib");
 
 export function* loginUser(req) {
   try {
