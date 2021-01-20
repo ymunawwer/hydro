@@ -5,7 +5,6 @@ import { Link, RouteChildrenProps } from "react-router-dom";
 import { IUserDetails } from "./Login.actionTypes";
 import { IUserResponse } from "../../commonTypes";
 import "./LoginCard.scss";
-import { getDeviceInfo } from "../../utils/global";
 import { PrimaryButton } from "../../common/styled-components";
 import { toast, ToastContainer } from "react-toastify";
 import { IForgotUserIdResponse } from "./forgotUserId/ForgotUserId.actionTypes";
@@ -43,7 +42,6 @@ const LoginCard = (props: IProps) => {
           modulesCategory: [],
           source_type: "web",
           ipAddress: "",
-          ...getDeviceInfo(),
         }}
         validationSchema={yupSchema.Login}
         onSubmit={(values: IUserDetails, { setSubmitting }) => {

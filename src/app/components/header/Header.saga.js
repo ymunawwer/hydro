@@ -10,6 +10,7 @@ import axiosInterceptor from "../login/axiosInterceptor";
 
 export function* logoutUser(req) {
   let res = null;
+  history.push("/login");
 
   let auditDetails = {
     ...getAuditData(),
@@ -30,7 +31,7 @@ export function* logoutUser(req) {
         userLogout: res.data,
       });
       axiosInterceptor();
-      history.push("/login");
+      //history.push("/login");
     } else {
       yield put({
         type: LogoutActionTypes.LOGOUT_FAILED,
@@ -48,35 +49,8 @@ export function* logoutUser(req) {
   }
 }
 
-export function* getLanguageMap(action) {
-  try {
-    if (process.env.NODE_ENV === "development" && Cookies.get("user")) {
-      const user = JSON.parse(Cookies.get("user"));
-      yield put({
-        type: LoginActionTypes.LOGIN_SUCCEEDED,
-        user: { success: true, data: user },
-      });
-      axiosInterceptor();
-    }
-    const res = yield call(endpoint.get, `${api.translation}/${action.lang}`);
-    if (res.data.success) {
-      yield put({
-        type: LogoutActionTypes.ADD_TRANSLATION,
-        data: res.data.data,
-        lang: action.lang,
-      });
-    }
-  } catch (err) {
-    // yield put({
-    //   type: LoginActionTypes.LOGIN_FAILED,
-    // });
-  }
-}
 
 export function* logoutUserWatcher() {
   yield takeLatest(LogoutActionTypes.LOGOUT, logoutUser);
 }
 
-export function* translateLang() {
-  yield takeLatest(LogoutActionTypes.CHANGE_LANGUAGE, getLanguageMap);
-}

@@ -125,10 +125,6 @@ exports.populateUserInfo = ({
   response.modules = rolesAndRights;
   response.accessToken = token;
   response.sessionId = sessionId;
-  response.isGroupAdmin = user.isGroupAdmin;
-  response.fk_group_id = user.fk_group_id;
-  response.fk_company_id = user.fk_company_id;
-  response.fundTransferLimit = user.fundTransferLimit;
   response.authkey = authkey;
 
   return response;
