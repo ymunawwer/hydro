@@ -52,12 +52,6 @@ module.exports = {
           chunks: "all",
           enforce: true,
         },
-        arabic: {
-          test: new RegExp(`-ar.(scss)$`),
-          name: "arabic",
-          chunks: "all",
-          enforce: true,
-        },
         common: {
           test: /\.(css)$/,
           name: "common",
@@ -74,7 +68,7 @@ module.exports = {
       filename: "index.html",
       inject: true,
       template: path.resolve(__dirname, "src/app", "index.html"),
-      excludeAssets: [/arabic.css/],
+     // excludeAssets: [/arabic.css/],
       favicon: "favicon.ico",
     }),
     new HtmlWebpackExcludeAssetsPlugin(),
