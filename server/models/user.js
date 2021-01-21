@@ -41,5 +41,5 @@ UserSchema.methods.isOldPassword = function(oldPwd, newPwd) {
  // return bcrypt.compareSync(newPwd, oldPwd);
 };
 
-const User = mongoose.model("Users", UserSchema, "users");
+const User = mongoose.model("users", UserSchema, "users");
 module.exports = User;
