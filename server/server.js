@@ -12,6 +12,9 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const swaggerUi = require('swagger-ui-express'),
  swaggerDocument = require('./swagger.json');
+var logger = require('morgan');
+
+
 dotenv.config({
   path:
     __dirname +
@@ -53,12 +56,14 @@ db.once("open", function callback() {
       }),
     })
   );*/
-  app.use("/api", require("./routes/index"));
+app.use(logger('dev'));
+app.use("/api", require("./routes/index"));
 });
 db.on("disconnected", function() {
   console.log("db disconnected...!");
 });
 
+/*
 app.use(
   cors({
     origin: [
@@ -69,6 +74,7 @@ app.use(
     credentials: true, // enable set cookie
   })
 );
+*/
 
 const allowCrossDomain = function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");

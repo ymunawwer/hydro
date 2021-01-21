@@ -56,6 +56,7 @@
     "moment": "^2.27.0",
     "mongodb": "^3.5.5",
     "mongoose": "^5.9.7",
+    "morgan": "^1.10.0",
     "mqtt": "^4.2.6",
     "multer": "^1.4.2",
     "multer-sftp": "^1.1.0",
