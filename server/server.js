@@ -92,6 +92,8 @@ client.on('message',function(topic, message, packet){
 })
 
 });
+
+
 db.on("disconnected", function() {
   console.log("db disconnected...!");
 });
