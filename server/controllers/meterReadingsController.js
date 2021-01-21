@@ -1,5 +1,5 @@
 const meterReadingsService = require("../services/meterReadingsService");
-var ttn = require("ttn")
+//var ttn = require("ttn")
 var mqtt=require('mqtt');
 
 exports.getMeterReadings = async (req, res) => {
