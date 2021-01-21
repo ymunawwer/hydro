@@ -1,5 +1,5 @@
 const userModel = require("../models/user");
-const bcrypt = require("bcrypt");
+//const bcrypt = require("bcrypt");
 const loginService = require("../services/loginService");
 const Constants = require("../constants.js");
 const passwordValidator = require("password-validator");
