@@ -25,14 +25,17 @@ exports.loginUser = async (req, res) => {
       { userName: req.body.userName },
       "userName password name"
     );
+    if (user) {
+        if(user.password === req.body.password){
+          return res.status(200).json({success:true});
 
+        }else{
+          return res.status(200).json(invalidUser);
 
-    if(req.body.userName =="water" && req.body.password=="meter"){
-      return res.status(200).json({success:true});
-
+        }
     }else{
-      return res.status(200).json({success:false});
-
+      return res.status(200).json(invalidUser);
+      
     }
 
     if (user) {
