@@ -57,7 +57,8 @@ db.once("open", function callback() {
     })
   );*/
 app.use(logger('dev'));
-app.use("/api", require("./routes/index"));
+//app.use("/api", require("./routes/index"));
+app.use("/", require("./routes/index")); // /api configured in nginx
 });
 db.on("disconnected", function() {
   console.log("db disconnected...!");
