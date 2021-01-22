@@ -7,13 +7,13 @@ const userController = require("../controllers/userController");
 
 app.post("/login", authenticationController.loginUser);
 
-// app.post(
-//   "/userInfo",
-//   authenticationService.validateHeaderSessionToken,
-//   authenticationController.userInfo
-// );
-
 app.get("/logout", authenticationController.logoutUser);
+
+app.post("/addProfile", userController.addProfile);
+
+app.post("/updateUserProfile", userController.updateUserProfile);
+
+app.post("/getUserProfile", userController.getUserProfile);
 
 
 app.post("/changePassword", loginController.changePassword);
@@ -25,12 +25,6 @@ app.get(
   loginController.getUser
 );
 
-
-app.post(
-  "/updateSettingsDetails",
-  authenticationService.validateHeaderSessionToken,
-  userController.updateUserDetails
-);
 
 
 app.post("/forgotUserId", userController.sendForgotUserIdMail);

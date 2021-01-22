@@ -2,10 +2,10 @@ const mongoose = require("mongoose");
 //const bcrypt = require("bcrypt");
 
 const UserSchema = mongoose.Schema({
-  _id: {
+  /*_id: {
     type: mongoose.Schema.Types.ObjectId,
     required: false,
-  },
+  },*/
   userName: {
     type: String,
     required: true,
@@ -18,11 +18,31 @@ const UserSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  firstName: {
+    type: String,
+    required: true,
+  },
+  lastName: {
+    type: String,
+    required: true,
+  },
   phone: {
     type: String,
     required: true,
   },
-  name: {
+  residentialAddress: {
+    type: String,
+    required: true,
+  },
+  city: {
+    type: String,
+    required: true,
+  },
+  state: {
+    type: String,
+    required: true,
+  },
+  zip: {
     type: String,
     required: true,
   },
