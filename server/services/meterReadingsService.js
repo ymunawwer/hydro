@@ -1,7 +1,13 @@
 const readingsModel = require("../models/readings");
 
 exports.getMeterReadings = async (user, expiresIn) => {
- return {};
+
+    let readings = await  readingsModel.find();
+
+    let messages = readings.map((reading) => {
+        return JSON.parse(reading.message);
+    })
+    return messages;
 };
 
 
