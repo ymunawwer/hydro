@@ -48,14 +48,9 @@ exports.addProfile = async (req, res) => {
 
 exports.updateUserProfile = async (req, res) => {
   try {
-    if (req.body && req.body.updateType != null) {
       const response = await userService.updateUserProfile({user:req.body});
       res.status(200).json(response);
-    } else {
-      res
-        .status(200)
-        .json({ success: false, message: Constants.API_ERROR_EN, data: {} });
-    }
+   
   } catch (err) {
     res.status(200).json({ status: false, message: Constants.API_ERROR_EN });
   }

@@ -52,8 +52,97 @@
                     }
                 }
             }
+        },        
+        "/addProfile": {
+            "post": {
+                "tags": [
+                    "SERVICES"
+                ],
+                "description": "addProfile",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": "true",
+                        "description": "Service to add user",
+                        "schema": {
+                            "$ref": "#/definitions/addProfile"
+                        }
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },      
+        "/updateUserProfile": {
+            "post": {
+                "tags": [
+                    "SERVICES"
+                ],
+                "description": "update User Profile",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": "true",
+                        "description": "Service to edit user profile",
+                        "schema": {
+                            "$ref": "#/definitions/updateUserProfile"
+                        }
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
         },
-        
+        "/getUserProfile": {
+            "post": {
+                "tags": [
+                    "SERVICES"
+                ],
+                "description": "login",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": "true",
+                        "description": "Service to getthe User Profile",
+                        "schema": {
+                            "$ref": "#/definitions/getUserProfile"
+                        }
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
         "/getMeterReadings": {
             "get": {
                 "tags": [
@@ -92,6 +181,126 @@
                     "type": "string",
                     "required": true,
                     "example": "meter123"
+                }
+            }
+        },
+        "addProfile": {
+            "type": "object",
+            "properties": {
+                "userName": {
+                    "type": "string",
+                    "required": true,
+                    "example": "yk_teja"
+                },
+                "password": {
+                    "type": "string",
+                    "required": true,
+                    "example": "yk_teja@1234"
+                },
+                "email": {
+                    "type": "string",
+                    "required": true,
+                    "example": "yk_teja@gmail.com"
+                },
+                "firstName": {
+                    "type": "string",
+                    "required": true,
+                    "example": "yk_teja"
+                },
+                "lastName": {
+                    "type": "string",
+                    "required": true,
+                    "example": "yk_teja"
+                },
+                "phone": {
+                    "type": "string",
+                    "required": true,
+                    "example": "meter123"
+                },
+                "residentialAddress": {
+                    "type": "string",
+                    "required": true,
+                    "example": "10-33,some street"
+                },
+                "city": {
+                    "type": "string",
+                    "required": true,
+                    "example": "Bangalore"
+                },
+                "state": {
+                    "type": "string",
+                    "required": true,
+                    "example": "Karnataka"
+                },
+                "zip": {
+                    "type": "string",
+                    "required": true,
+                    "example": "500076"
+                }
+            }
+        },
+        "updateUserProfile": {
+            "type": "object",
+            "properties": {
+                "userName": {
+                    "type": "string",
+                    "required": true,
+                    "example": "yk_teja"
+                },
+                "password": {
+                    "type": "string",
+                    "required": true,
+                    "example": "yk_teja@1234"
+                },
+                "email": {
+                    "type": "string",
+                    "required": true,
+                    "example": "yk_teja@gmail.com"
+                },
+                "firstName": {
+                    "type": "string",
+                    "required": true,
+                    "example": "yk_teja"
+                },
+                "lastName": {
+                    "type": "string",
+                    "required": true,
+                    "example": "yk_teja"
+                },
+                "phone": {
+                    "type": "string",
+                    "required": true,
+                    "example": "meter123"
+                },
+                "residentialAddress": {
+                    "type": "string",
+                    "required": true,
+                    "example": "10-33,some street"
+                },
+                "city": {
+                    "type": "string",
+                    "required": true,
+                    "example": "Bangalore"
+                },
+                "state": {
+                    "type": "string",
+                    "required": true,
+                    "example": "Karnataka"
+                },
+                "zip": {
+                    "type": "string",
+                    "required": true,
+                    "example": "500076"
+                }
+            }
+        },
+        "getUserProfile": {
+            "type": "object",
+            "properties": {
+                "userName": {
+                    "type": "string",
+                    "required": true,
+                    "example": "yk_teja"
                 }
             }
         }

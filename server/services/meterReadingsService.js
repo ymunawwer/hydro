@@ -30,7 +30,7 @@ exports.saveReading = async ({message}) => {
 
     }
         catch (err) {
-            console.log("err occured in saveBeneficiaries due to : " + err);
+            console.log("err occured in saveReading due to : " + err);
             
           }
    };
