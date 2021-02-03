@@ -9,7 +9,10 @@ exports.getMeterReadings = async (user, expiresIn) => {
     let messages = readings.map((reading) => {
       //  return JSON.parse(reading.message);
       let message = JSON.parse(reading.message) ;
-      let decodedPayload = base64decode(message.uplink_message.frm_payload);
+      let decodedPayload = "";
+      if(message.uplink_message){
+        decodedPayload = base64decode(message.uplink_message.frm_payload);
+      }
         return {
             message,
             decodedPayload
