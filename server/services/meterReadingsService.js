@@ -6,13 +6,20 @@ exports.getMeterReadings = async ({ fromDate,toDate,readingRange}) => {
 
     let formattedFromDate = moment(fromDate,"DD/MM/YYYY").toDate();
     let formattedToDate = moment(toDate,"DD/MM/YYYY").toDate();
-    let readings = await  readingsModel.find(
-        {
-             receivedAt: {
-                  $gte:formattedFromDate,
-                   $lte:formattedToDate
-                 }
-        } );
+    let readings;
+    if(["weekly","monthly"].indexOf(readingRange) > -1){
+        readings = await  readingsModel.find();
+
+    }else{
+        readings = await  readingsModel.find(
+            {
+                 receivedAt: {
+                      $gte:formattedFromDate,
+                       $lte:formattedToDate
+                     }
+            } );
+
+    }
    // let readings = await  readingsModel.find({ receivedAt: { $gte:new Date(fromDate), $lte: new Date(toDate) } });
     //let readings = await  readingsModel.find();
 
