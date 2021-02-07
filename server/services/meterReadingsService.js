@@ -109,22 +109,25 @@ exports.getMeterReadings = async ({ fromDate,toDate,readingRange}) => {
 
 
 exports.getLatestMeterReading = async () => {
-    console.log("getLatestMeterReading");
+    //console.log("getLatestMeterReading");
 
-    let latestReading = await  readingsModel.findOne().sort({receivedAt: -1});
-    console.log(latestReading);
+    //let latestReading = await  readingsModel.findOne().sort({receivedAt: -1});
+    let latestReadings = await  readingsModel.find().sort({receivedAt: -1}).limit(10);
+   // console.log(latestReadings);
 
-    let message = JSON.parse(latestReading.message) ;
-      let decodedPayload = "",totalReading=0, date;
-      if(message.uplink_message){
+    let totalReading,date;
+    for(let reading of latestReadings){
+    let message = JSON.parse(reading.message) ;
+      let decodedPayload = "";
+      if(message && message.uplink_message){
         decodedPayload = base64decode(message.uplink_message.frm_payload);
         let readings = decodedPayload.split("_");
          readings = readings.slice(0,6); // only first 6 values are readings
-        let timeDiff  = 12/(readings.length -1 );
         totalReading  = readings.reduce((total,sum ) => parseInt(total) + (parseInt(sum) * 10) ,0);
-        //date = message.uplink_message.rx_metadata[0].time;
-        date = message.received_at;
+        date = moment(message.received_at).format("DD-MM-YYYY");
+        break;
       }
+    }
 
 
 
