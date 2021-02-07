@@ -109,8 +109,10 @@ exports.getMeterReadings = async ({ fromDate,toDate,readingRange}) => {
 
 
 exports.getLatestMeterReading = async () => {
+    console.log("getLatestMeterReading");
 
     let latestReading = await  readingsModel.findOne().sort({receivedAt: -1});
+    console.log(latestReading);
 
     let message = JSON.parse(latestReading.message) ;
       let decodedPayload = "",totalReading=0, date;
