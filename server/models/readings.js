@@ -10,6 +10,10 @@ const ReadingsSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  receivedAt: {
+    type: Date,
+    required: true,
+  },
   /*
   timestamp: {
     type: String,

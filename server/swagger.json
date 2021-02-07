@@ -6,7 +6,7 @@
         "description": "Api Information"
     },
     "host": "13.232.224.69",
-    "basePath": "/api",
+    "basePath": "/api",    
     "tags": [
         {
             "name": "SERVICES",
@@ -144,12 +144,44 @@
             }
         },
         "/getMeterReadings": {
+            "post": {
+                "tags": [
+                    "SERVICES"
+                ],
+                "description": "meterReadings",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": "true",
+                        "description": "Service to get the meter Readings",
+                        "schema": {
+                            "$ref": "#/definitions/meterReadings"
+                        }
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/getLatestMeterReading": {
             "get": {
                 "tags": [
                     "SERVICES"
                 ],
-                "description": "getMeterReadings",
-                
+                "description": "latest meter Reading",
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -301,6 +333,23 @@
                     "type": "string",
                     "required": true,
                     "example": "yk_teja"
+                }
+            }
+        },
+        "meterReadings": {
+            "type": "object",
+            "properties": {
+                "fromDate": {
+                    "type": "date",
+                    "example": "01/01/2021"
+                },
+                "toDate": {
+                    "type": "date",
+                    "example": "07/02/2021"
+                },
+                "readingRange":{
+                    "type": "string",
+                    "example": "weekly"                
                 }
             }
         }
