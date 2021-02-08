@@ -63,7 +63,7 @@ exports.getMeterReadings = async ({ fromDate,toDate,readingRange}) => {
                 monthlyReadings[month] = message.totalReading;
             }
         }else{
-            let day = moment(message.date).format("DD-MM-YYYY");
+            let day = moment(message.date).format("YYYY-MM-DD");
              if(dailyReadings[day]){
                 dailyReadings[day] += message.totalReading;
             }else{
