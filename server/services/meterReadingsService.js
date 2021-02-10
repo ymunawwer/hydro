@@ -32,7 +32,7 @@ exports.getMeterReadings = async ({ fromDate,toDate,readingRange}) => {
         let readings = decodedPayload.split("_");
          readings = readings.slice(0,6); // only first 6 values are readings
          let timeDiff  = 12/(readings.length -1 );
-        totalReading  = readings.reduce((total,sum ) => parseInt(total) + (parseInt(sum) * 10) ,0);
+        totalReading  = readings.reduce((total,sum ) => isNaN(sum) ? 0: parseInt(total) + (parseInt(sum) * 10) ,0);
         //date = message.uplink_message.rx_metadata[0].time;
         date = message.received_at;
       }
