@@ -183,7 +183,7 @@ exports.saveReading = async ({message}) => {
       exports.getLatestDecodedPayloads = async () => {
         try {
             let decodedPayloads = {};
-            let readings = await  readingsModel.find();
+            let readings = await  readingsModel.find().sort({_id:-1});
             
                 for(let reading of readings){
                     console.log(reading);
