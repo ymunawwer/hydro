@@ -95,7 +95,7 @@ exports.logWriter = function(data, filename, folderName, append) {
   if (typeof data === "object") {
     data = JSON.stringify(data);
   }
-  logPath = createLogFolder(folderName);
+  let logPath = createLogFolder(folderName);
   logPath = logPath + filename + ".log";
   if (append) {
     var newData = "\n" + data;

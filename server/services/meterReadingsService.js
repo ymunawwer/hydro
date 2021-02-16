@@ -179,3 +179,24 @@ exports.saveReading = async ({message}) => {
                
              }
       };
+
+      exports.getLatestDecodedPayloads = async () => {
+        try {
+            let decodedPayloads = {};
+            let readings = await  readingsModel.find();
+            
+                for(let reading of readings){
+                    console.log(reading);
+                    let decodedPayload;
+                    let message  = JSON.parse(reading.message);
+                    if(message && message.uplink_message){
+                      decodedPayload = base64decode(message.uplink_message.frm_payload);
+                    }
+                    decodedPayloads[message.received_at] = decodedPayload;
+                }
+           return decodedPayloads;
+               }
+            catch (err) {
+                console.log("err occured in saveReading due to : " + err);
+             }
+      }

@@ -23,7 +23,7 @@ exports.getLatestMeterReading = async (req, res) => {
 }
 
 // temporary - 
-   exports.updateReadingsCollection = async (req, res) => {
+exports.updateReadingsCollection = async (req, res) => {
    
     const {fromDate,toDate} = req.body;
     let readings = await  meterReadingsService.updateReadingsCollection();
@@ -32,6 +32,15 @@ exports.getLatestMeterReading = async (req, res) => {
      
    
    };
+   // temporary - 
+      exports.getLatestDecodedPayloads = async (req, res) => {
+      
+       let readings = await  meterReadingsService.getLatestDecodedPayloads();
+      
+       res.json(readings);
+        
+      
+      };
 
 
 module.exports = exports;
