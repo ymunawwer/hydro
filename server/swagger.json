@@ -118,7 +118,7 @@
                 "tags": [
                     "SERVICES"
                 ],
-                "description": "login",
+                "description": "getUserProfile",
                 "parameters": [
                     {
                         "name": "body",
@@ -157,6 +157,36 @@
                         "description": "Service to get the meter Readings",
                         "schema": {
                             "$ref": "#/definitions/meterReadings"
+                        }
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/saveDevice    ": {
+            "post": {
+                "tags": [
+                    "SERVICES"
+                ],
+                "description": "saveDevice",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": "true",
+                        "description": "Service to get the meter Readings",
+                        "schema": {
+                            "$ref": "#/definitions/saveDevice"
                         }
                     }
                 ],
@@ -348,6 +378,47 @@
                     "example": "07/02/2021"
                 },
                 "readingRange":{
+                    "type": "string",
+                    "example": "weekly"                
+                }
+            }
+        },
+        "saveDevice": {
+            "type": "object",
+            "properties": {
+                "organisationID":{
+                    "type": "string",
+                    "example": "1234RPL"                
+                },
+                "deviceID":{
+                    "type": "string",
+                    "example": "1234"                
+                },
+                "serialID":{
+                    "type": "string",
+                    "example": "1234"                
+                },
+                "type":{
+                    "type": "string",
+                    "example": "water"                
+                },
+                "network":{
+                    "type": "string",
+                    "example": "network"                
+                },
+                "user":{
+                    "type": "string",
+                    "example": "admin"                
+                },
+                "country":{
+                    "type": "string",
+                    "example": "IN"                
+                },
+                "leakageLimit":{
+                    "type": "string",
+                    "example": "10"                
+                },
+                "dataTransmissionTime":{
                     "type": "string",
                     "example": "weekly"                
                 }

@@ -13,14 +13,24 @@ exports.getMeterReadings = async (req, res) => {
    
    };
 
-exports.getLatestMeterReading = async (req, res) => {
+   exports.getLatestMeterReading = async (req, res) => {
 
-   //const {fromDate,toDate,readingRange} = req.body;
-    let reading = await  meterReadingsService.getLatestMeterReading();
-   
-    res.json(reading);
+    //const {fromDate,toDate,readingRange} = req.body;
+     let reading = await  meterReadingsService.getLatestMeterReading();
     
-}
+     res.json(reading);
+     
+ }
+
+ exports.saveDevice = async (req, res) => {
+ 
+    let device = req.body;
+    //const {fromDate,toDate,readingRange} = req.body;
+     let status = await  meterReadingsService.saveDevice({device});
+    
+     res.json(status);
+     
+ }
 
 // temporary - 
 exports.updateReadingsCollection = async (req, res) => {

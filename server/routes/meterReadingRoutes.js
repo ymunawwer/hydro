@@ -10,5 +10,7 @@ app.get("/getLatestMeterReading", meterReadingsController.getLatestMeterReading)
 app.get("/updateReadingsCollection", meterReadingsController.updateReadingsCollection);
 app.get("/getLatestDecodedPayloads", meterReadingsController.getLatestDecodedPayloads);
 
+app.post("/saveDevice", meterReadingsController.saveDevice);
+
 
 module.exports = app;

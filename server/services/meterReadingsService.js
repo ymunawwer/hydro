@@ -1,4 +1,5 @@
 const readingsModel = require("../models/readings");
+const devicesModel = require("../models/devices");
 const { base64decode } = require("nodejs-base64");
 const moment = require('moment');
 
@@ -32,7 +33,8 @@ exports.getMeterReadings = async ({ fromDate,toDate,readingRange}) => {
         let readings = decodedPayload.split("_");
          readings = readings.slice(0,6); // only first 6 values are readings
          let timeDiff  = 12/(readings.length -1 );
-        totalReading  = readings.reduce((total,sum ) => isNaN(sum) ? 0: parseInt(total) + (parseInt(sum) * 10) ,0);
+        //totalReading  = readings.reduce((total,sum ) => isNaN(sum) ? 0: parseInt(total) + (parseInt(sum) * 10) ,0);
+        totalReading  = (parseInt(readings[6]) - parseInt(readings[0])) * 10 ;
         //date = message.uplink_message.rx_metadata[0].time;
         date = message.received_at;
       }
@@ -122,8 +124,9 @@ exports.getLatestMeterReading = async () => {
       if(message && message.uplink_message){
         decodedPayload = base64decode(message.uplink_message.frm_payload);
         let readings = decodedPayload.split("_");
-         readings = readings.slice(0,6); // only first 6 values are readings
-        totalReading  = readings.reduce((total,sum ) => parseInt(total) + (parseInt(sum) * 10) ,0);
+     /*    readings = readings.slice(0,6); // only first 6 values are readings
+        totalReading  = readings.reduce((total,sum ) => parseInt(total) + (parseInt(sum) * 10) ,0);*/
+        totalReading = parseInt(readings[6]) * 10;
         date = moment(message.received_at).format("DD-MM-YYYY");
         break;
       }
@@ -154,6 +157,21 @@ exports.saveReading = async ({message}) => {
             
           }
    };
+
+   
+exports.saveDevice = async ({device}) => {
+
+  
+    try {
+        await new devicesModel(device).save();
+        return { success: true };
+    }
+        catch (err) {
+            console.log("err occured in saveDevice due to : " + err);
+             return { success: false };            
+          }
+   };
+
 
    exports.updateReadingsCollection = async () => {
    
