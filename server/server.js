@@ -15,7 +15,7 @@ const swaggerUi = require('swagger-ui-express'),
 var logger = require('morgan');
 var mqtt=require('mqtt');
 var meterReadingService =require('./services/meterReadingsService');
-
+var serviceHelper = require('./helper/serviceHelper');
 
 dotenv.config({
   path:
@@ -81,18 +81,22 @@ var client = mqtt.connect("mqtt://eu1.cloud.thethings.industries:1883",
     client.subscribe('#')
     //client.subscribe('watermeter/gateway/connect')
     //client.subscribe('garage/open')
-  })
+  serviceHelper.logWriter("connected mqqt",'debug','debug',true);
+})
 
   //handle incoming messages
 client.on('message',function(topic, message, packet){
 	console.log("message is "+ message);
   console.log("topic is "+ topic);
+  let data= {message,topic}
+  serviceHelper.logWriter(JSON.stringify(data),'messages','logs',true);
   meterReadingService.saveReading({message});
   
 });
 
 client.on("error",function(error){
   console.log("Can't connect"+error);
+  serviceHelper.logWriter(error,'debug','debug',true);
 })
 
 });
