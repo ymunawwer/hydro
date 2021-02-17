@@ -146,7 +146,7 @@ exports.saveReading = async ({message}) => {
 
     let reading = {
         message,
-        receivedAt:new Date(moment(message.received_at).format("DD-MM-YYYY"))
+        receivedAt:new Date(message.received_at)
     }
     try {
         const readings = await new readingsModel(reading).save();
