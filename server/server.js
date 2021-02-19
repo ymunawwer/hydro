@@ -88,9 +88,9 @@ var client = mqtt.connect("mqtt://eu1.cloud.thethings.industries:1883",
 client.on('message',function(topic, message, packet){
 	console.log("message is "+ message);
   console.log("topic is "+ topic);
-  let data= {message,topic}
+  let data= {message:JSON.parse(message.toString()),topic}
   serviceHelper.logWriter(JSON.stringify(data),'messages','logs',true);
-  meterReadingService.saveReading({message});
+  meterReadingService.saveReading({message:JSON.parse(message.toString())});
   
 });
 
