@@ -145,7 +145,7 @@ exports.getLatestMeterReading = async () => {
 exports.saveReading = async ({message}) => {
 
     let reading = {
-        message,
+        message:JSON.stringify(message),
         receivedAt:new Date(message.received_at)
     }
     try {
