@@ -14,6 +14,10 @@ const ReadingsSchema = mongoose.Schema({
     type: Date,
     required: true,
   },
+  topic:{
+    type: String,
+    required: true,
+  },
   /*
   timestamp: {
     type: String,

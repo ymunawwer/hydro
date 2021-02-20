@@ -142,11 +142,12 @@ exports.getLatestMeterReading = async () => {
 
 }
 
-exports.saveReading = async ({message}) => {
+exports.saveReading = async ({message,topic}) => {
 
     let reading = {
         message:JSON.stringify(message),
-        receivedAt:new Date(message.received_at)
+        receivedAt:new Date(message.received_at),
+        topic        
     }
     try {
         const readings = await new readingsModel(reading).save();
