@@ -151,7 +151,7 @@ exports.saveReading = async ({message,topic}) => {
     }
     try {
         const readings = await new readingsModel(reading).save();
-
+            console.log('message saved successfully')
     }
         catch (err) {
             console.log("err occured in saveReading due to : " + err);
@@ -211,11 +211,15 @@ exports.saveDevice = async ({device}) => {
                     if(message && message.uplink_message){
                       decodedPayload = base64decode(message.uplink_message.frm_payload);
                     }
-                    decodedPayloads[message.received_at] = decodedPayload;
+                    decodedPayloads[message.received_at] = {
+                        decodedPayload,
+                        device:message.end_device_ids.device_id,
+                        topic:message.topic,
+                    };
                 }
            return decodedPayloads;
-               }
-            catch (err) {
-                console.log("err occured in saveReading due to : " + err);
-             }
+         }
+        catch (err) {
+            console.log("err occured in saveReading due to : " + err);
+            }
       }

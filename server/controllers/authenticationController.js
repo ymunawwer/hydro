@@ -23,11 +23,11 @@ exports.loginUser = async (req, res) => {
 
     let user = await userModel.findOne(
       { userName: req.body.userName },
-      "userName password name"
+      "userName password name role"
     );
     if (user) {
         if(user.password === req.body.password){
-          return res.status(200).json({success:true});
+          return res.status(200).json({success:true,role:user.role});
 
         }else{
           return res.status(200).json(invalidUser);
