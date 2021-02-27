@@ -32,6 +32,18 @@ exports.getMeterReadings = async (req, res) => {
      
  }
 
+ 
+   exports.getLast24HrsConsumption = async (req, res) => {
+      
+    let readings = await  meterReadingsService.getLast24HrsConsumption();
+   
+    res.json(readings);
+     
+   
+   };
+
+
+
 // temporary - 
 exports.updateReadingsCollection = async (req, res) => {
    

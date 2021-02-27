@@ -221,6 +221,25 @@
                     }
                 }
             }
+        },
+        "/getLast24HrsConsumption": {
+            "get": {
+                "tags": [
+                    "SERVICES"
+                ],
+                "description": "last 24 hrs consumption",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
         }
     },
     "securityDefinitions":{

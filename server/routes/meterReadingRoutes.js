@@ -12,5 +12,7 @@ app.get("/getLatestDecodedPayloads", meterReadingsController.getLatestDecodedPay
 
 app.post("/saveDevice", meterReadingsController.saveDevice);
 
+app.get("/getLast24HrsConsumption", meterReadingsController.getLast24HrsConsumption);
+
 
 module.exports = app;

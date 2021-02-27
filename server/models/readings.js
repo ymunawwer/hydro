@@ -18,6 +18,10 @@ const ReadingsSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  device:{
+    type: String,
+    //required: true,
+  },
   /*
   timestamp: {
     type: String,

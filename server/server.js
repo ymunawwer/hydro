@@ -90,7 +90,9 @@ client.on('message',function(topic, message, packet){
   console.log("topic is "+ topic);
   let data= {message:JSON.parse(message.toString()),topic}
   serviceHelper.logWriter(JSON.stringify(data),'messages','logs',true);
-  meterReadingService.saveReading({message:JSON.parse(message.toString()),topic});
+   message  = JSON.parse(message.toString());
+      let device = message.end_device_ids.device_id;
+  meterReadingService.saveReading({message,topic,device});
   
 });
 
