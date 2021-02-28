@@ -82,6 +82,36 @@
                     }
                 }
             }
+        },         
+        "/admin/addProfile": {
+            "post": {
+                "tags": [
+                    "SERVICES"
+                ],
+                "description": "add Profile for admin",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": "true",
+                        "description": "Service to add user",
+                        "schema": {
+                            "$ref": "#/definitions/addProfileAdmin"
+                        }
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
         },      
         "/updateUserProfile": {
             "post": {
@@ -317,6 +347,56 @@
                     "type": "string",
                     "required": true,
                     "example": "500076"
+                }
+            }
+        },
+        "addProfileAdmin": {
+            "type": "object",
+            "properties": {
+                "organisationId": {
+                    "type": "string",
+                    "required": true,
+                    "example": "riveria-device"
+                },
+                "organisationName": {
+                    "type": "string",
+                    "required": true,
+                    "example": "riveria"
+                },
+                "type": {
+                    "type": "string",
+                    "required": true,
+                    "example": "water"
+                },
+                "address": {
+                    "type": "string",
+                    "required": true,
+                    "example": "plot no. 12,some street"
+                },
+                "city": {
+                    "type": "string",
+                    "required": true,
+                    "example": "Bangalore"
+                },
+                "post": {
+                    "type": "string",
+                    "required": true,
+                    "example": "Bangalore"
+                },
+                "country": {
+                    "type": "string",
+                    "required": true,
+                    "example": "India"
+                },
+                "contactNumber": {
+                    "type": "string",
+                    "required": true,
+                    "example": "9160722833"
+                },
+                "webSite": {
+                    "type": "string",
+                    "required": true,
+                    "example": "www.riveria.com"
                 }
             }
         },

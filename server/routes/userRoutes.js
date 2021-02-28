@@ -9,7 +9,11 @@ app.post("/login", authenticationController.loginUser);
 
 app.get("/logout", authenticationController.logoutUser);
 
+
 app.post("/addProfile", userController.addProfile);
+
+app.post("/admin/addProfile", userController.addProfileForAdmin);
+
 
 app.post("/updateUserProfile", userController.updateUserProfile);
 

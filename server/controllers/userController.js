@@ -1,5 +1,6 @@
 const userService = require("../services/userService");
 const userModel = require("../models/user");
+const userModelAdmin = require("../models/userProfileAdmin");
 const mongoose = require("mongoose");
 const Constants = require("../constants.js");
 
@@ -46,6 +47,34 @@ exports.addProfile = async (req, res) => {
     
   }
 
+  exports.addProfileForAdmin = async (req, res) => {
+
+    //let user = req.user;
+    const isUserExist = await userModelAdmin.exists({ organisationId: req.body.organisationId });
+    if (isUserExist) {
+      res
+        .status(200)
+        .json({ success: false, message: "User already exist" });
+      } else {
+  
+          try {
+  
+          const user1 = await new userModelAdmin(req.body).save();
+  
+          res
+            .status(200)
+            .json({ success: true, message: "User successfully saved" });
+        }
+        catch(err){
+          console.log(err);
+            res
+            .status(200)
+            .json({ success: false, message: "User not saved successfully" });
+        }
+      }
+      
+  }
+  
 exports.updateUserProfile = async (req, res) => {
   try {
       const response = await userService.updateUserProfile({user:req.body});
