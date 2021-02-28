@@ -50,27 +50,33 @@ exports.getMeterReadings = async ({ fromDate,toDate,readingRange}) => {
         };
     });
     var dailyReadings = {},weeklyReadings={},monthlyReadings={};
+    let availableDevices = ["officemeter","testdevice","soham-demo"];
 
     for(let message of messages){
 
         if(readingRange === "weekly"){
             let week = moment(message.date).week();
 
-            /*if(weeklyReadings[message.device] === undefined){
-                weeklyReadings[message.device] = {}
-            }*/
-
             if(weeklyReadings[week]){
-               // weeklyReadings[message.device][week] += message.totalReading;
-               if(weeklyReadings[week][message.device]){
+               //if(weeklyReadings[week][message.device]){
+               if(availableDevices.indexOf(message.device) > -1){
                 weeklyReadings[week][message.device] += message.totalReading;
-                }else{
+                }/*else{
                 weeklyReadings[week][message.device] = message.totalReading ;
-                }
+                }*/
             }else{
-                weeklyReadings[week] = {};
+                //weeklyReadings[week] = {};
+                weeklyReadings[week] = {
+                    "officemeter" : 0,
+                    "testdevice" : 0,
+                    "soham-demo" : 0
+                };
 
-                weeklyReadings[week][message.device] = message.totalReading || 0;
+                //if(weeklyReadings[week][message.device]){
+               if(availableDevices.indexOf(message.device) > -1){
+                weeklyReadings[week][message.device] += message.totalReading;
+                }
+              //  weeklyReadings[week][message.device] = message.totalReading || 0;
             }
         }else if(readingRange === "monthly"){
 
@@ -78,15 +84,25 @@ exports.getMeterReadings = async ({ fromDate,toDate,readingRange}) => {
 
             if(monthlyReadings[month]){
                 // weeklyReadings[message.device][week] += message.totalReading;
-                if(monthlyReadings[month][message.device]){
-                    monthlyReadings[month][message.device] += message.totalReading;
-                 }else{
+               // if(monthlyReadings[month][message.device]){
+               if(availableDevices.indexOf(message.device) > -1){
+                monthlyReadings[month][message.device] += message.totalReading;
+                 }/*else{
                     monthlyReadings[month][message.device] = message.totalReading ;
-                 }
+                 }*/
              }else{
-                monthlyReadings[month] = {};
- 
-                monthlyReadings[month][message.device] = message.totalReading || 0;
+                //monthlyReadings[month] = {};
+                monthlyReadings[month] = {
+                    "officemeter" : 0,
+                    "testdevice" : 0,
+                    "soham-demo" : 0
+                };
+
+               // if(monthlyReadings[month][message.device]){
+               if(availableDevices.indexOf(message.device) > -1){
+                monthlyReadings[month][message.device] += message.totalReading;
+                }
+                //monthlyReadings[month][message.device] = message.totalReading || 0;
              }
 
              /*if(monthlyReadings[message.device][month]){
@@ -101,23 +117,27 @@ exports.getMeterReadings = async ({ fromDate,toDate,readingRange}) => {
 
             if(dailyReadings[day]){
                 // weeklyReadings[message.device][week] += message.totalReading;
-                if(dailyReadings[day][message.device]){
-                 dailyReadings[day][message.device] += message.totalReading;
-                 }else{
+                //if(dailyReadings[day][message.device]){
+               if(availableDevices.indexOf(message.device) > -1){
+                dailyReadings[day][message.device] += message.totalReading;
+                 }/*else{
                  dailyReadings[day][message.device] = message.totalReading ;
-                 }
+                 }*/
              }else{
-                 dailyReadings[day] = {};
+               //  dailyReadings[day] = {};
+                 dailyReadings[day] = {
+                    "officemeter" : 0,
+                    "testdevice" : 0,
+                    "soham-demo" : 0
+               };
  
-                 dailyReadings[day][message.device] = message.totalReading || 0;
+
+             //  if(dailyReadings[day][message.device]){
+               if(availableDevices.indexOf(message.device) > -1){
+                dailyReadings[day][message.device] += message.totalReading;
+               }
+                 //dailyReadings[day][message.device] = message.totalReading || 0;
              }
-
-
-           /*  if(dailyReadings[message.device][day]){
-                dailyReadings[message.device][day] += message.totalReading;
-            }else{
-                dailyReadings[message.device][day] = message.totalReading || 0;
-            }*/
         }
     }
 
