@@ -5,7 +5,7 @@
         "title": "API SERVICES",
         "description": "Api Information"
     },
-    "host": "13.232.224.69",
+    "host": "15.206.169.29",
     "basePath": "/api",    
     "tags": [
         {
