@@ -53,10 +53,9 @@ exports.getMeterReadings = async ({ fromDate,toDate,readingRange}) => {
         };
     });
     var dailyReadings = {},weeklyReadings={},monthlyReadings={};
-    let availableDevices = ["officemeter","testdevice","soham-demo","ittinademo"];
+    let availableDevices = ["officemeter","soham-demo","ittinademo"];
     let  defaultReadings = {
             "officemeter" : 0,
-            "testdevice" : 0,
             "ittinademo" : 0,
             "soham-demo" : 0
         }
