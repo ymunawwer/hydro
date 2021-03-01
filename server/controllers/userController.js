@@ -10,7 +10,7 @@ exports.getUserProfile = async (req, res) => {
         if(user){
         res.status(200).json({success:true,user});
       }else{
-        res.status(200).json({success:false,msg:"user doen't exist"});
+        res.status(200).json({success:false,message:"user doesn't exist"});
       }
     
   } catch (err) {
