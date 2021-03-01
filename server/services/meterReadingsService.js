@@ -53,8 +53,13 @@ exports.getMeterReadings = async ({ fromDate,toDate,readingRange}) => {
         };
     });
     var dailyReadings = {},weeklyReadings={},monthlyReadings={};
-    let availableDevices = ["officemeter","testdevice","soham-demo"];
-
+    let availableDevices = ["officemeter","testdevice","soham-demo","ittinademo"];
+    let  defaultReadings = {
+            "officemeter" : 0,
+            "testdevice" : 0,
+            "ittinademo" : 0,
+            "soham-demo" : 0
+        }
     for(let message of messages){
 
         if(readingRange === "weekly"){
@@ -69,11 +74,7 @@ exports.getMeterReadings = async ({ fromDate,toDate,readingRange}) => {
                 }*/
             }else{
                 //weeklyReadings[week] = {};
-                weeklyReadings[week] = {
-                    "officemeter" : 0,
-                    "testdevice" : 0,
-                    "soham-demo" : 0
-                };
+                weeklyReadings[week] = defaultReadings;
 
                 //if(weeklyReadings[week][message.device]){
                if(availableDevices.indexOf(message.device) > -1){
@@ -95,11 +96,7 @@ exports.getMeterReadings = async ({ fromDate,toDate,readingRange}) => {
                  }*/
              }else{
                 //monthlyReadings[month] = {};
-                monthlyReadings[month] = {
-                    "officemeter" : 0,
-                    "testdevice" : 0,
-                    "soham-demo" : 0
-                };
+                monthlyReadings[month] = defaultReadings;
 
                // if(monthlyReadings[month][message.device]){
                if(availableDevices.indexOf(message.device) > -1){
@@ -128,11 +125,7 @@ exports.getMeterReadings = async ({ fromDate,toDate,readingRange}) => {
                  }*/
              }else{
                //  dailyReadings[day] = {};
-                 dailyReadings[day] = {
-                    "officemeter" : 0,
-                    "testdevice" : 0,
-                    "soham-demo" : 0
-               };
+                 dailyReadings[day] = defaultReadings;
  
 
              //  if(dailyReadings[day][message.device]){
