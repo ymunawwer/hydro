@@ -64,5 +64,17 @@ exports.updateReadingsCollection = async (req, res) => {
       
       };
 
+      
+ exports.saveBkUp = async (req, res) => {
+ 
+    let device = req.body;
+    //const {fromDate,toDate,readingRange} = req.body;
+     let status = await  meterReadingsService.saveBkUp();
+    
+     res.json(status);
+     
+ }
+
+
 
 module.exports = exports;

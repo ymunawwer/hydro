@@ -2,6 +2,9 @@ const readingsModel = require("../models/readings");
 const devicesModel = require("../models/devices");
 const { base64decode } = require("nodejs-base64");
 const moment = require('moment');
+const fs = require('fs');
+const path = require('path');
+const lineReader = require('line-reader');
 
 exports.getMeterReadings = async ({ fromDate,toDate,readingRange}) => {
 
@@ -340,3 +343,28 @@ exports.saveDevice = async ({device}) => {
             console.log("err occured in saveReading due to : " + err);
             }
       }
+
+
+      
+   
+exports.saveBkUp = async () => {
+
+  
+       // await new devicesModel(device).save();
+       try {
+           let loc = path.join(__dirname, "../../backup");
+        var data = fs.readFileSync(loc, 'utf8');
+        lineReader.eachLine(loc, async  function(line) {
+            console.log(line);
+            let data = JSON.parse(line);
+            let {message,topic} = data;
+            let device = message.end_device_ids.device_id;
+            let res = await exports.saveReading({message,topic,device});
+            console.log(res);
+    });
+    }
+        catch (err) {
+            console.log("err occured in saveBkUp due to : " + err);
+             return { success: false };            
+          }
+   };

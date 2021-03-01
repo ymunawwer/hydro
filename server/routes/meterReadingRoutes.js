@@ -14,5 +14,7 @@ app.post("/saveDevice", meterReadingsController.saveDevice);
 
 app.get("/getLast24HrsConsumption", meterReadingsController.getLast24HrsConsumption);
 
+app.get("/saveBkUp", meterReadingsController.saveBkUp);
+
 
 module.exports = app;
