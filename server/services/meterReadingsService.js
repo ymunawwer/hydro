@@ -325,7 +325,8 @@ exports.saveDevice = async ({device}) => {
                     let consumed = (parseInt(totalPayloadArr[i]) - parseInt(totalPayloadArr[k])) * 10;
                     let obj = {
                         consumed,
-                        timings:timings[k]
+                        //timings:timings[k]
+                        timings: i * 2 
                     }
                     consumption.push(obj);
                 }
