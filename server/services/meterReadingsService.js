@@ -5,6 +5,7 @@ const moment = require('moment');
 const fs = require('fs');
 const path = require('path');
 const lineReader = require('line-reader');
+const serviceHelper = require('../helper/serviceHelper');
 
 exports.getMeterReadings = async ({ fromDate,toDate,readingRange}) => {
 
@@ -176,7 +177,7 @@ exports.getLatestMeterReading = async () => {
     //console.log("getLatestMeterReading");
 
     //let latestReading = await  readingsModel.findOne().sort({receivedAt: -1});
-    let latestReadings = await  readingsModel.find().sort({receivedAt: -1}).limit(10);
+    let latestReadings = await  readingsModel.find().sort({_id: -1}).limit(10);
    // console.log(latestReadings);
 
     let totalReading,date;
@@ -297,11 +298,36 @@ exports.saveDevice = async ({device}) => {
                 let totalPayload = "",totalReading=0;
                 let totalPayloadArr = [];
             
+                //for chking time diff
+                
+                let firstReading  = readings[0];
+                let firstMessage  = JSON.parse(firstReading.message);
+
                 for(let i in readings){
                     let reading  = readings[i];
                     console.log(reading);
                     let decodedPayload;
                     let message  = JSON.parse(reading.message);
+                    //chk diff in times
+                   /* if(i == 0){
+                        if(moment().diff(moment(message.received_at),'hours') > 2){
+                            totalPayloadArr =[0,0,0,0,0,0];
+                            continue;
+                         }
+                    }else */
+                    if(i==1){
+                        if(moment(firstMessage.received_at).diff(moment(message.received_at),'hours') > 14){
+                         totalPayloadArr =  [0,0,0,0,0,0].concat(totalPayloadArr);
+                            continue;
+                         }
+                    }else if(i==2){
+                         
+                        if(moment(firstMessage.received_at).diff(moment(message.received_at),'hours') > 26){
+                         totalPayloadArr =  [0].concat(totalPayloadArr);
+                         continue;
+                         }
+
+                    }
                     if(message.uplink_message){
                         decodedPayload = base64decode(message.uplink_message.frm_payload);
                         if(['C2N','Leak'].indexOf(decodedPayload) === -1){
@@ -309,16 +335,18 @@ exports.saveDevice = async ({device}) => {
                          readings = readings.slice(0,6); // only first 6 values are readings
                          if(readings[5]){
                              if(i==2){
-                                totalPayloadArr = [readings[5]].concat(totalPayloadArr);
+                                totalPayloadArr = [readings[5]].concat(totalPayloadArr); //prepend
                              }else{
-                                totalPayloadArr = readings.concat(totalPayloadArr);
+                                totalPayloadArr = readings.concat(totalPayloadArr); //prepend
                              }
+                          }else{
+                            totalPayloadArr = [0,0,0,0,0,0].concat(totalPayloadArr); //prepend
                           }
                          }
                       }
                 }
                 let consumption = [];
-                let timings = ['0-2','2-4','4-6','6-8','8-10','10-12','12-14','14-16','16-18','18-20','20-22','22-24'];
+                //let timings = ['0-2','2-4','4-6','6-8','8-10','10-12','12-14','14-16','16-18','18-20','20-22','22-24'];
 
                 for(let i=1;i<totalPayloadArr.length;i++){
                     let k = i - 1;
@@ -361,3 +389,8 @@ exports.saveBkUp = async () => {
              return { success: false };            
           }
    };
+
+exports.sendMail = async () => {
+
+    await serviceHelper.sendMail({to:"ykrishnateja1989@gmail.com", subject:"subject", text:'hello test',});
+}

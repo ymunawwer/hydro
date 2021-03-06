@@ -7,6 +7,7 @@ const multer = require("multer");
 const fs = require("fs");
 const moment = require("moment");
 const Constants = require("../constants.js");
+const nodemailer = require("nodemailer");
 
 var storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -127,61 +128,68 @@ function createLogFolder(folderName) {
   return logPathDir + "/";
 }
 
-example = () => {
-  var balancereq = {
-    OSVBalanceEnquiryRequest: {
-      StartDate: date,
-      EndDate: date,
-      TransactionType: "BE",
 
-      OSVPaymentInfoMessage: [
-        {
-          OSVPaymentInfoRequest: {
-            BankCode: "BSF",
-            CompanyCode: "JAZEERA",
-            AccountNumbers: {
-              AccountNumber: [
-                {
-                  AccNumber: "BSF1111111111"
-                },
-                {
-                  AccNumber: "BSF2222222222",
-                  BICCode: "BSFRSARIXXX"
-                }
-              ]
-            }
-          }
-        },
-        {
-          OSVPaymentInfoRequest: {
-            BankCode: "ALRAJHI",
-            CompanyCode: "JAZEERA",
-            AccountNumbers: {
-              AccountNumber: [
-                {
-                  AccNumber: "NCB1111111111"
-                }
-              ]
-            }
-          }
-        },
-        {
-          OSVPaymentInfoRequest: {
-            BankCode: "NCB",
-            CompanyCode: "JAZEERA",
-            B2BIdentifier: "ttttt",
-            AccountNumbers: {
-              AccountNumber: [
-                {
-                  AccNumber: "NCB3333333333"
-                }
-              ]
-            }
-          }
-        }
-      ]
-    }
+
+exports.sendMail = async ({to, subject, text, attachments}) => {
+  // Only needed if you don't have a real mail account for testing
+  /* let testAccount = await nodemailer.createTestAccount();
+
+    // create reusable transporter object using the default SMTP transport
+    let transporter = nodemailer.createTransport({
+      host: "smtp.ethereal.email",
+      port: 587,
+      secure: false, // true for 465, false for other ports
+      auth: {
+        user: testAccount.user, // generated ethereal user
+        pass: testAccount.pass // generated ethereal password
+      }
+    });  */
+
+  const transporter = nodemailer.createTransport({
+    service:"Gmail",
+    //host: "smtpout.secureserver.net",
+    //host: "smtp.gmail.com",
+    secure: true,
+   // secureConnection: false, // TLS requires secureConnection to be false
+    //tls: {
+   //   ciphers: "SSLv3",
+   // },
+   // requireTLS: true,
+    port: 465,
+   // debug: process.env.NODE_ENV === "development" ? true : false,*/
+    auth: {
+      //user: process.env.EMAIL_AUTH_USER,
+      user: "ykrishnateja20@gmail.com",
+      //pass: process.env.EMAIL_AUTH_PSWD,
+      pass: "YKTeja@222",
+    },
+  });
+
+  const mailOptions = {
+    //from: process.env.EMAIL_AUTH_USER,
+    from: "testosv.222@gmail.com",
+    to,
+    subject,
+    html: text,
+    attachments,
   };
+
+  try {
+    let info = await transporter.sendMail(mailOptions);
+    console.log(
+      "Email sent: " + info.response + " :  to " + to + " : subject " + subject
+    );
+    return {
+      status: Constants.SUCCESS,
+      message: "Email Sent",
+    };
+  } catch (err) {
+    console.log(err);
+    return {
+      status: Constants.FAILED,
+      message: "Email failed to send, Please try again",
+    };
+  }
 };
 
 module.exports = exports;
