@@ -1,34 +1,78 @@
 const readingsModel = require("../models/readings");
 const devicesModel = require("../models/devices");
+const meterDataModel = require("../models/meterData");
 const { base64decode } = require("nodejs-base64");
 const moment = require('moment');
 const fs = require('fs');
 const path = require('path');
 const lineReader = require('line-reader');
 const serviceHelper = require('../helper/serviceHelper');
+const { ResumeToken } = require("mongodb");
 
 exports.getMeterReadings = async ({ fromDate,toDate,readingRange}) => {
 
     let formattedFromDate = moment(fromDate,"DD/MM/YYYY").toDate();
     let formattedToDate = moment(toDate,"DD/MM/YYYY").toDate();
-    let readings;
+    let availableDevices = ["officemeter","soham-demo","ittinademo"];
+
+
+    let readingsAggregator = [],matchCriteria = {};
+
     if(["weekly","monthly"].indexOf(readingRange) > -1){
-        readings = await  readingsModel.find();
-
+        matchCriteria = {
+            $match: {
+              device:{ $in: availableDevices}            
+            },
+          }
     }else{
-        readings = await  readingsModel.find(
-            {
-                 receivedAt: {
-                      $gte:formattedFromDate,
-                       $lte:formattedToDate
-                     }
-            } );
-
+        matchCriteria = { $match: { 
+            $and: [ 
+              {device:{ $in: availableDevices} } ,          
+              {
+                dateTime: {
+                     $gte:formattedFromDate,
+                      $lte:formattedToDate
+                    }
+              }    
+            ]
+        }
+      }  
     }
-   // let readings = await  readingsModel.find({ receivedAt: { $gte:new Date(fromDate), $lte: new Date(toDate) } });
-    //let readings = await  readingsModel.find();
 
-    let messages = readings.map((reading,index) => {
+    readingsAggregator.push(matchCriteria);
+    readingsAggregator = readingsAggregator.concat(
+     [{
+        $group: {
+            _id:{
+                device:"$device",
+             date:{$dateToString: {
+                format: "%Y-%m-%d", date: "$dateTime" ,timezone: "+05:30"
+              }}
+            },      
+        maxValue : {$max : "$reading"} , 
+        minValue : {$min : "$reading"},
+        },
+        
+     },
+     {
+         $addFields : {
+             consumption : {$subtract: [ "$maxValue", "$minValue" ]}
+         }
+     },
+     {
+         $group:{
+             _id: "$_id.device",
+             readings: { $push: {
+                date:"$_id.date",
+                consumption:"$consumption",
+             } 
+        }
+         }
+     }]
+     );
+    let readings = await  meterDataModel.aggregate(readingsAggregator);
+
+    /*let messages = readings.map((reading,index) => {
       //  return JSON.parse(reading.message);
       let message = JSON.parse(reading.message) ;
       let decodedPayload = "",totalReading=0, date = message.received_at;
@@ -52,90 +96,66 @@ exports.getMeterReadings = async ({ fromDate,toDate,readingRange}) => {
             date,
             device
         };
-    });
+    });*/
     var dailyReadings = {},weeklyReadings={},monthlyReadings={};
-    let availableDevices = ["officemeter","soham-demo","ittinademo"];
     let  defaultReadings = {
             "officemeter" : 0,
             "ittinademo" : 0,
             "soham-demo" : 0
         }
-    for(let message of messages){
+    for(let message of readings){
+        for(let dailyConsumption of message.readings){
 
         if(readingRange === "weekly"){
-            let week = moment(message.date).week();
+            let week = moment(dailyConsumption.date).week();
 
             if(weeklyReadings[week]){
-               //if(weeklyReadings[week][message.device]){
-               if(availableDevices.indexOf(message.device) > -1){
-                weeklyReadings[week][message.device] += message.totalReading;
-                }/*else{
-                weeklyReadings[week][message.device] = message.totalReading ;
-                }*/
-            }else{
-                //weeklyReadings[week] = {};
-                weeklyReadings[week] = defaultReadings;
-
-                //if(weeklyReadings[week][message.device]){
-               if(availableDevices.indexOf(message.device) > -1){
-                weeklyReadings[week][message.device] += message.totalReading;
+              // if(availableDevices.indexOf(message.device) > -1){
+                if(availableDevices.indexOf(message._id) > -1){
+                weeklyReadings[week][message._id] += (dailyConsumption.consumption * 10);
                 }
-              //  weeklyReadings[week][message.device] = message.totalReading || 0;
+            }else{
+                weeklyReadings[week] = JSON.parse(JSON.stringify(defaultReadings));
+
+               if(availableDevices.indexOf(message._id) > -1){
+                weeklyReadings[week][message._id] += (dailyConsumption.consumption * 10);
+                }
             }
         }else if(readingRange === "monthly"){
 
-            let month = moment(message.date).format("MMM");
+            let month = moment(dailyConsumption.date).format("MMM");
 
             if(monthlyReadings[month]){
-                // weeklyReadings[message.device][week] += message.totalReading;
-               // if(monthlyReadings[month][message.device]){
-               if(availableDevices.indexOf(message.device) > -1){
-                monthlyReadings[month][message.device] += message.totalReading;
-                 }/*else{
-                    monthlyReadings[month][message.device] = message.totalReading ;
-                 }*/
+               if(availableDevices.indexOf(message._id) > -1){
+                monthlyReadings[month][message._id] += (dailyConsumption.consumption * 10);
+                 }
              }else{
-                //monthlyReadings[month] = {};
-                monthlyReadings[month] = defaultReadings;
+                monthlyReadings[month] = JSON.parse(JSON.stringify(defaultReadings));
 
-               // if(monthlyReadings[month][message.device]){
-               if(availableDevices.indexOf(message.device) > -1){
-                monthlyReadings[month][message.device] += message.totalReading;
+               if(availableDevices.indexOf(message._id) > -1){
+                monthlyReadings[month][message._id] += (dailyConsumption.consumption * 10);
                 }
-                //monthlyReadings[month][message.device] = message.totalReading || 0;
              }
-
-             /*if(monthlyReadings[message.device][month]){
-                monthlyReadings[message.device][month] += message.totalReading;
-            }else{
-                monthlyReadings[message.device][month] = message.totalReading || 0;
-            }*/
 
         }else{
 
-            let day = moment(message.date).format("YYYY-MM-DD");
+            let day = moment(dailyConsumption.date).format("YYYY-MM-DD");
 
-            if(dailyReadings[day]){
-                // weeklyReadings[message.device][week] += message.totalReading;
-                //if(dailyReadings[day][message.device]){
-               if(availableDevices.indexOf(message.device) > -1){
-                dailyReadings[day][message.device] += message.totalReading;
-                 }/*else{
-                 dailyReadings[day][message.device] = message.totalReading ;
-                 }*/
-             }else{
-               //  dailyReadings[day] = {};
-                 dailyReadings[day] = defaultReadings;
+            /*if(dailyReadings[day]){
+               if(availableDevices.indexOf(message._id) > -1){
+                dailyReadings[day][message._id] = (dailyConsumption.consumption * 10);
+                 }
+             }else{*/
+                 dailyReadings[day] = JSON.parse(JSON.stringify(defaultReadings));
  
 
-             //  if(dailyReadings[day][message.device]){
-               if(availableDevices.indexOf(message.device) > -1){
-                dailyReadings[day][message.device] += message.totalReading;
+               if(availableDevices.indexOf(message._id) > -1){
+                dailyReadings[day][message._id] = (dailyConsumption.consumption * 10);
                }
-                 //dailyReadings[day][message.device] = message.totalReading || 0;
-             }
+             //}
         }
     }
+}
 
     let meterReadings=[];
 
@@ -237,7 +257,7 @@ exports.saveDevice = async ({device}) => {
           }
    };
 
-
+//temp
    exports.updateReadingsCollection = async () => {
    
       
@@ -294,71 +314,37 @@ exports.saveDevice = async ({device}) => {
       exports.getLast24HrsConsumption = async () => {
         try {
             let decodedPayloads = {};
-            let readings = await  readingsModel.find({device:'ittinademo'}).sort({_id:-1}).limit(3);
-                let totalPayload = "",totalReading=0;
-                let totalPayloadArr = [];
+           // let readings = await  readingsModel.find({device:'ittinademo'}).sort({_id:-1}).limit(3);
+
+           
+
+            let formattedFromDate = moment.utc().subtract(26,'hours').toDate();
+            let formattedToDate = moment.utc().toDate();
+            let readings = await  meterDataModel.find(
+                {device:{ $in: ["ittinademo", "officemeter", "soham-demo"]},
+                dateTime: {
+                 $gte:formattedFromDate,
+                 $lte:formattedToDate
+               }}).sort({dateTime:-1}).limit(15);
             
-                //for chking time diff
-                
-                let firstReading  = readings[0];
-                let firstMessage  = JSON.parse(firstReading.message);
+                let last24Hrs = {
+                    "ittinademo":[],
+                    "officemeter":[],
+                    "soham-demo":[],
+                };
 
-                for(let i in readings){
-                    let reading  = readings[i];
-                    console.log(reading);
-                    let decodedPayload;
-                    let message  = JSON.parse(reading.message);
-                    //chk diff in times
-                   /* if(i == 0){
-                        if(moment().diff(moment(message.received_at),'hours') > 2){
-                            totalPayloadArr =[0,0,0,0,0,0];
-                            continue;
-                         }
-                    }else */
-                    if(i==1){
-                        if(moment(firstMessage.received_at).diff(moment(message.received_at),'hours') > 14){
-                         totalPayloadArr =  [0,0,0,0,0,0].concat(totalPayloadArr);
-                            continue;
-                         }
-                    }else if(i==2){
-                         
-                        if(moment(firstMessage.received_at).diff(moment(message.received_at),'hours') > 26){
-                         totalPayloadArr =  [0].concat(totalPayloadArr);
-                         continue;
-                         }
-
-                    }
-                    if(message.uplink_message){
-                        decodedPayload = base64decode(message.uplink_message.frm_payload);
-                        if(['C2N','Leak'].indexOf(decodedPayload) === -1){
-                        let readings = decodedPayload.split("_");
-                         readings = readings.slice(0,6); // only first 6 values are readings
-                         if(readings[5]){
-                             if(i==2){
-                                totalPayloadArr = [readings[5]].concat(totalPayloadArr); //prepend
-                             }else{
-                                totalPayloadArr = readings.concat(totalPayloadArr); //prepend
-                             }
-                          }else{
-                            totalPayloadArr = [0,0,0,0,0,0].concat(totalPayloadArr); //prepend
-                          }
-                         }
-                      }
+                for(let i = 0; i< readings.length-1;i++){
+                    let currentReading = readings[i];
+                    let prevReading = readings[i+1];
+                    last24Hrs[currentReading.device].push({
+                        time:currentReading.dateTime,
+                        reading: (currentReading.reading - prevReading.reading) *10 ,
+                    });
                 }
-                let consumption = [];
-                //let timings = ['0-2','2-4','4-6','6-8','8-10','10-12','12-14','14-16','16-18','18-20','20-22','22-24'];
 
-                for(let i=1;i<totalPayloadArr.length;i++){
-                    let k = i - 1;
-                    let consumed = (parseInt(totalPayloadArr[i]) - parseInt(totalPayloadArr[k])) * 10;
-                    let obj = {
-                        consumed,
-                        //timings:timings[k]
-                        timings: i * 2 
-                    }
-                    consumption.push(obj);
-                }
-           return consumption;
+
+
+           return last24Hrs;
          }
         catch (err) {
             console.log("err occured in saveReading due to : " + err);
@@ -393,4 +379,166 @@ exports.saveBkUp = async () => {
 exports.sendMail = async () => {
 
     await serviceHelper.sendMail({to:"ykrishnateja1989@gmail.com", subject:"subject", text:'hello test',});
+}
+
+//temporary
+exports.interpretMeterReadings = async () => {
+
+    try {
+        let readings = await  readingsModel.find().sort({_id:1});
+        
+            for(let reading of readings){
+                console.log(reading);
+                let message  = JSON.parse(reading.message);
+
+                 // read data 
+
+                await  exports.interpretMeterMessage({message});
+      
+      }
+
+    }
+       
+    
+    catch (err) {
+        console.log("err occured in saveReading due to : " + err);
+            
+    }
+}
+
+const getMinutes = (time) => {
+
+    let [HH,mm] = time.split(':');
+
+    return (parseInt(HH) * 60) + parseInt(mm);
+}
+
+
+exports.interpretMeterMessage = async ({message}) => {
+
+
+    let decodedPayload = "",totalReading=0, utcDate = moment.utc(message.received_at),
+            formattedReceivedDate = moment.utc(message.received_at).format('YYYY-MM-DD HH:mm'); //timezone issues with 'Z' format
+      if(message.uplink_message){
+        decodedPayload = base64decode(message.uplink_message.frm_payload);
+        if(['C2N','Leak'].indexOf(decodedPayload) === -1){
+        let readings = decodedPayload.split("_");
+         readings = readings.slice(0,6); // only first 6 values are readings
+         let cutOffReading,cutOffIndex;
+         if(readings[5]){   //valid data
+            //modified
+            let device = message.end_device_ids.device_id
+            let  dateTimeReadings = [];let cutOffReadingGiven = false;
+            //for(let i =0; readings){
+            for(let i=5,hrs=0;i>=0;i--){
+                let currentReading = readings[i];
+                let dateTime = moment(formattedReceivedDate).subtract(hrs,'hours').toDate();
+                if(moment(dateTime).isSame(moment(formattedReceivedDate), 'day') || cutOffReadingGiven === true){
+                    let dateTimeReading = {
+                        dateTime : dateTime,
+                         reading:parseInt(currentReading),
+                        device
+                    };
+                    dateTimeReadings.push(dateTimeReading);
+
+                }else {
+                    let prevReading = readings[i+1];
+
+                    // Your moment at midnight
+                    let mmtMidnight = moment(message.received_at).clone().startOf('day');
+                    // Difference in minutes
+                    let diffMinutes = mmtMidnight.diff(moment(dateTime), 'minutes');
+
+                    let diffReadings = prevReading - currentReading ;
+
+                    // define cutOffReading in the ratio of diff in minutes
+                    let cutOffReading = Math.round(parseInt(currentReading) + ((diffMinutes/120) * diffReadings));
+                    
+                    let dateTimeCutOffReading = {
+                        dateTime : mmtMidnight.toDate(),
+                         reading:cutOffReading,
+                        device
+                    };
+                    dateTimeReadings.push(dateTimeCutOffReading);
+                    
+                    let dateTimeReading = {
+                        dateTime : dateTime,
+                        reading:parseInt(currentReading),
+                        device
+                    };
+                    dateTimeReadings.push(dateTimeReading);
+
+                    cutOffReadingGiven = true;
+                }
+                
+                hrs = hrs + 2;
+
+                //corner case scenario of first reading being in between 00:00 & 02:00
+                if(i==0 && cutOffReadingGiven === false){
+                  let prevDateTime = moment(formattedReceivedDate).subtract(hrs,'hours').toDate();
+                
+                    if(moment(prevDateTime).isSame(moment(formattedReceivedDate), 'day') == false){
+                         prevDateTime = moment(prevDateTime).subtract(1,'hours').toDate(); // 1 more for removing strict 2 hrs check
+
+                        let results = await  meterDataModel.find({
+                            dateTime : {
+                                $gte:prevDateTime,
+                                 $lte:dateTime
+                            },
+                        });
+                        if(results.length > 0 ){
+                            
+                            let prevReading = results[0].reading;
+                            // Your moment at midnight
+                            let mmtMidnight = moment(message.received_at).clone().startOf('day');
+                            // Difference in minutes
+                            let diffMinutes = mmtMidnight.diff(moment(prevDateTime), 'minutes');
+        
+                            let diffReadings =  currentReading -  prevReading ;
+        
+                            // define cutOffReading in the ratio of diff in minutes
+                            let cutOffReading = prevReading + ((diffMinutes/120) * diffReadings);
+                            
+                            let dateTimeCutOffReading = {
+                                dateTime : mmtMidnight.toDate(),
+                                reading:parseInt(cutOffReading),
+                                device
+                            };
+                            dateTimeReadings.push(dateTimeCutOffReading);
+                            
+                            let dateTimeReading = {
+                                dateTime : dateTime,
+                                reading:parseInt(currentReading),
+                                device
+                            };
+                            dateTimeReadings.push(dateTimeReading);
+
+                        }
+
+                    }
+                }
+
+            }
+
+
+            console.log('#####');   
+            
+            // bulk save
+            //const result = await new meterDataModel(data).save();
+            
+          const response = await meterDataModel.insertMany(dateTimeReadings);
+
+
+         //dateTimeReadings.sort((a,b) => moment(a.dateTime).diff(b.dateTime));
+
+         
+            console.log('data saved successfully');   
+
+
+              
+             
+            }
+          }
+         }
+
 }

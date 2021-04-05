@@ -84,6 +84,15 @@ exports.updateReadingsCollection = async (req, res) => {
          
      }
 
+//temp
+exports.interpretMeterReadings = async (req, res) => {
+     
+    //const {fromDate,toDate,readingRange} = req.body;
+     let status = await  meterReadingsService.interpretMeterReadings();
+    
+     res.json({success:true});
+
+}
 
 
 module.exports = exports;

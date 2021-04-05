@@ -39,7 +39,7 @@ mongoose.connect(process.env.MONGO_DB_CONNECTION, {
   useFindAndModify: false,
 });
 
-let db = mongoose.connection;
+let db = mongoose.connection;var client;
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
 db.once("open", function callback() {
   console.log("db connected...!");
@@ -65,7 +65,7 @@ app.use("/", require("./routes/index")); // /api configured in nginx
 
 
 //subscribe to devices
-var client = mqtt.connect("mqtt://eu1.cloud.thethings.industries:1883",
+client = mqtt.connect("mqtt://eu1.cloud.thethings.industries:1883",
 //var client = mqtt.connect("mqtt://broker.hivemq.com",
 {
   clientId:"hydroid",
@@ -82,6 +82,11 @@ var client = mqtt.connect("mqtt://eu1.cloud.thethings.industries:1883",
     //client.subscribe('watermeter/gateway/connect')
     //client.subscribe('garage/open')
   serviceHelper.logWriter("connected mqqt",'debug','debug',true);
+
+  /*client.publish('v3/watermeter@cybereye/devices/ittinademo/up',Buffer.from('1f', 'hex'),{},(res) => {
+      console.log(res);
+  })*/
+
 })
 
   //handle incoming messages
@@ -93,6 +98,10 @@ client.on('message',function(topic, message, packet){
    message  = JSON.parse(message.toString());
       let device = message.end_device_ids.device_id;
   meterReadingService.saveReading({message,topic,device});
+
+
+  // read data 
+  meterReadingService.interpretMeterMessage({message});
   
 });
 

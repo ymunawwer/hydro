@@ -17,6 +17,9 @@ app.get("/getLast24HrsConsumption", meterReadingsController.getLast24HrsConsumpt
 app.get("/saveBkUp", meterReadingsController.saveBkUp);
 
 
-app.get("/sendMail", meterReadingsController.sendMail)
+app.get("/sendMail", meterReadingsController.sendMail);
+
+
+app.get("/interpretMeterReadings", meterReadingsController.interpretMeterReadings);
 
 module.exports = app;
