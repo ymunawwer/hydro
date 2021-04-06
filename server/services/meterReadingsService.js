@@ -46,7 +46,8 @@ exports.getMeterReadings = async ({ fromDate,toDate,readingRange}) => {
             _id:{
                 device:"$device",
              date:{$dateToString: {
-                format: "%Y-%m-%d", date: "$dateTime" ,timezone: "+05:30"
+              //  format: "%Y-%m-%d", date: "$dateTime" ,timezone: "+05:30"
+                format: "%Y-%m-%d", date: "$dateTime" 
               }}
             },      
         maxValue : {$max : "$reading"} , 
@@ -107,7 +108,7 @@ exports.getMeterReadings = async ({ fromDate,toDate,readingRange}) => {
         for(let dailyConsumption of message.readings){
 
         if(readingRange === "weekly"){
-            let week = moment.utc(dailyConsumption.date).week();
+            let week = moment(dailyConsumption.date).week();
 
             if(weeklyReadings[week]){
               // if(availableDevices.indexOf(message.device) > -1){
@@ -123,7 +124,7 @@ exports.getMeterReadings = async ({ fromDate,toDate,readingRange}) => {
             }
         }else if(readingRange === "monthly"){
 
-            let month = moment.utc(dailyConsumption.date).format("MMM");
+            let month = moment(dailyConsumption.date).format("MMM");
 
             if(monthlyReadings[month]){
                if(availableDevices.indexOf(message._id) > -1){
@@ -139,7 +140,7 @@ exports.getMeterReadings = async ({ fromDate,toDate,readingRange}) => {
 
         }else{
 
-            let day = moment.utc(dailyConsumption.date).format("YYYY-MM-DD");
+            let day = moment(dailyConsumption.date).format("YYYY-MM-DD");
 
             /*if(dailyReadings[day]){
                if(availableDevices.indexOf(message._id) > -1){
