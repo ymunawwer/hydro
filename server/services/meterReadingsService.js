@@ -190,6 +190,10 @@ exports.getMeterReadings = async ({ fromDate,toDate,readingRange}) => {
 
     }    
 
+    //sort daily readings
+    if(Object.keys(dailyReadings).length > 0){
+        meterReadings.sort((reading1,reading2) => moment(reading1.date).diff(moment(reading2.date)))
+    }
     return meterReadings;
 };
 
