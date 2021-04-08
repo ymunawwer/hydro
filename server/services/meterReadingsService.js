@@ -12,7 +12,7 @@ const { ResumeToken } = require("mongodb");
 exports.getMeterReadings = async ({ fromDate,toDate,readingRange}) => {
 
     let formattedFromDate = moment(fromDate,"DD/MM/YYYY").toDate();
-    let formattedToDate = moment(toDate,"DD/MM/YYYY").toDate();
+    let formattedToDate = moment(toDate,"DD/MM/YYYY").endOf('day').toDate();
     let availableDevices = ["officemeter","soham-demo","ittinademo"];
 
 
@@ -142,18 +142,18 @@ exports.getMeterReadings = async ({ fromDate,toDate,readingRange}) => {
 
             let day = moment(dailyConsumption.date).format("YYYY-MM-DD");
 
-            /*if(dailyReadings[day]){
+            if(dailyReadings[day]){
                if(availableDevices.indexOf(message._id) > -1){
                 dailyReadings[day][message._id] = (dailyConsumption.consumption * 10);
                  }
-             }else{*/
+             }else{
                  dailyReadings[day] = JSON.parse(JSON.stringify(defaultReadings));
  
 
                if(availableDevices.indexOf(message._id) > -1){
                 dailyReadings[day][message._id] = (dailyConsumption.consumption * 10);
                }
-             //}
+             }
         }
     }
 }
