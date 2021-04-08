@@ -144,14 +144,20 @@ exports.getMeterReadings = async ({ fromDate,toDate,readingRange}) => {
 
             if(dailyReadings[day]){
                if(availableDevices.indexOf(message._id) > -1){
-                dailyReadings[day][message._id] = (dailyConsumption.consumption * 10);
+                   let consumption  = dailyConsumption.consumption * 10; // diff. *10
+                   //round off to two decimals 
+                   consumption = Math.round(consumption * 100)/100
+                    dailyReadings[day][message._id] = consumption;
                  }
              }else{
                  dailyReadings[day] = JSON.parse(JSON.stringify(defaultReadings));
  
 
                if(availableDevices.indexOf(message._id) > -1){
-                dailyReadings[day][message._id] = (dailyConsumption.consumption * 10);
+                let consumption  = dailyConsumption.consumption * 10; // diff. *10
+                //round off to two decimals 
+                consumption = Math.round(consumption * 100)/100
+                dailyReadings[day][message._id] = consumption;
                }
              }
         }
@@ -441,7 +447,7 @@ exports.interpretMeterMessage = async ({message}) => {
                 if(moment(dateTime).isSame(moment(formattedReceivedDate), 'day') || cutOffReadingGiven === true){
                     let dateTimeReading = {
                         dateTime : dateTime,
-                         reading:parseInt(currentReading),
+                         reading:parseFloat(currentReading),
                         device
                     };
                     dateTimeReadings.push(dateTimeReading);
@@ -457,7 +463,7 @@ exports.interpretMeterMessage = async ({message}) => {
                     let diffReadings = prevReading - currentReading ;
 
                     // define cutOffReading in the ratio of diff in minutes
-                    let cutOffReading = Math.round(parseInt(currentReading) + ((diffMinutes/120) * diffReadings));
+                    let cutOffReading = Math.round(parseFloat(currentReading) + ((diffMinutes/120) * diffReadings));
                     
                     let dateTimeCutOffReading = {
                         dateTime : mmtMidnight.toDate(),
@@ -468,7 +474,7 @@ exports.interpretMeterMessage = async ({message}) => {
                     
                     let dateTimeReading = {
                         dateTime : dateTime,
-                        reading:parseInt(currentReading),
+                        reading:parseFloat(currentReading),
                         device
                     };
                     dateTimeReadings.push(dateTimeReading);
@@ -506,14 +512,24 @@ exports.interpretMeterMessage = async ({message}) => {
                             
                             let dateTimeCutOffReading = {
                                 dateTime : mmtMidnight.toDate(),
-                                reading:parseInt(cutOffReading),
+                                reading:parseFloat(cutOffReading),
                                 device
                             };
                             dateTimeReadings.push(dateTimeCutOffReading);
-                            
+
+                            //end of prev day at 11:59
+                            let prevEndOfDay = moment(prevDateTime).clone().endOf('day');
+
+                            dateTimeReadings.push({
+                                dateTime : prevEndOfDay.toDate(),
+                                reading:parseFloat(cutOffReading),
+                                device
+                            });
+
+                            //current 
                             let dateTimeReading = {
                                 dateTime : dateTime,
-                                reading:parseInt(currentReading),
+                                reading:parseFloat(currentReading),
                                 device
                             };
                             dateTimeReadings.push(dateTimeReading);
