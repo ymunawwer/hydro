@@ -108,18 +108,34 @@ exports.getMeterReadings = async ({ fromDate,toDate,readingRange}) => {
         for(let dailyConsumption of message.readings){
 
         if(readingRange === "weekly"){
-            let week = moment(dailyConsumption.date).week();
+            let week;
+            //let week = moment(dailyConsumption.date).week();
+            let weekNo = moment(dailyConsumption.date).week();
+
+            let weekStart = `${moment(`${weekNo} 2021`,'ww YYYY').startOf('week').format('DD MMM')}`;
+            let weekEnd = `${moment(`${weekNo} 2021`,'ww YYYY').endOf('week').format('DD MMM')}`;
+
+            week = `${weekStart}-${weekEnd}`;
 
             if(weeklyReadings[week]){
               // if(availableDevices.indexOf(message.device) > -1){
                 if(availableDevices.indexOf(message._id) > -1){
-                weeklyReadings[week][message._id] += (dailyConsumption.consumption * 10);
+                    let consumption  = dailyConsumption.consumption * 10; // diff. *10
+                    //round off to two decimals 
+                    consumption = Math.round(consumption * 100)/100;
+                    let netConsumption = weeklyReadings[week][message._id] = consumption;
+                    weeklyReadings[week][message._id] += netConsumption;
                 }
             }else{
                 weeklyReadings[week] = JSON.parse(JSON.stringify(defaultReadings));
 
                if(availableDevices.indexOf(message._id) > -1){
-                weeklyReadings[week][message._id] += (dailyConsumption.consumption * 10);
+
+                let consumption  = dailyConsumption.consumption * 10; // diff. *10
+                //round off to two decimals 
+                consumption = Math.round(consumption * 100)/100
+
+                weeklyReadings[week][message._id] += consumption;
                 }
             }
         }else if(readingRange === "monthly"){
@@ -128,13 +144,22 @@ exports.getMeterReadings = async ({ fromDate,toDate,readingRange}) => {
 
             if(monthlyReadings[month]){
                if(availableDevices.indexOf(message._id) > -1){
-                monthlyReadings[month][message._id] += (dailyConsumption.consumption * 10);
+                let consumption  = dailyConsumption.consumption * 10; // diff. *10
+                //round off to two decimals 
+                consumption = Math.round(consumption * 100)/100
+
+                monthlyReadings[month][message._id] += consumption;
                  }
              }else{
                 monthlyReadings[month] = JSON.parse(JSON.stringify(defaultReadings));
 
                if(availableDevices.indexOf(message._id) > -1){
-                monthlyReadings[month][message._id] += (dailyConsumption.consumption * 10);
+
+                let consumption  = dailyConsumption.consumption * 10; // diff. *10
+                //round off to two decimals 
+                consumption = Math.round(consumption * 100)/100;
+
+                monthlyReadings[month][message._id] += consumption;
                 }
              }
 
@@ -147,7 +172,7 @@ exports.getMeterReadings = async ({ fromDate,toDate,readingRange}) => {
                    let consumption  = dailyConsumption.consumption * 10; // diff. *10
                    //round off to two decimals 
                    consumption = Math.round(consumption * 100)/100
-                    dailyReadings[day][message._id] = consumption;
+                    dailyReadings[day][message._id] += consumption;
                  }
              }else{
                  dailyReadings[day] = JSON.parse(JSON.stringify(defaultReadings));
@@ -157,7 +182,7 @@ exports.getMeterReadings = async ({ fromDate,toDate,readingRange}) => {
                 let consumption  = dailyConsumption.consumption * 10; // diff. *10
                 //round off to two decimals 
                 consumption = Math.round(consumption * 100)/100
-                dailyReadings[day][message._id] = consumption;
+                dailyReadings[day][message._id] += consumption;
                }
              }
         }
@@ -200,6 +225,11 @@ exports.getMeterReadings = async ({ fromDate,toDate,readingRange}) => {
     if(Object.keys(dailyReadings).length > 0){
         meterReadings.sort((reading1,reading2) => moment(reading1.date).diff(moment(reading2.date)))
     }
+    //sort monthly readings
+    if(Object.keys(dailyReadings).length > 0){
+        meterReadings.sort((reading1,reading2) => moment(reading1.month,'MMM').diff(moment(reading2.month,'MMM')))
+    }
+
     return meterReadings;
 };
 
