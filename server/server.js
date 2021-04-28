@@ -83,11 +83,37 @@ client = mqtt.connect("mqtt://eu1.cloud.thethings.industries:1883",
     //client.subscribe('garage/open')
   serviceHelper.logWriter("connected mqqt",'debug','debug',true);
 
-  /*client.publish('v3/watermeter@cybereye/devices/ittinademo/up',Buffer.from('1f', 'hex'),{},(res) => {
-      console.log(res);
-  })*/
+  var options={
+    retain:true,
+    qos:1};
 
-})
+     /* client.publish('v3/watermeter@cybereye/devices/ittinademo/tx',Buffer.from('1E', 'hex'),options,(err,res) => {
+      console.log(res);
+      });*/
+
+      var pm = JSON.stringify({
+        "reference": 'abcd1234', // reference which will be used on ack or error (this can be a random string)
+        confirmed: true, // whether the payload must be sent as confirmed data down or not
+        fPort: 1, // FPort to use (must be > 0)
+       // data: Buffer.from("1E").toString("base64"), // base64 encoded data (plaintext, will be encrypted by LoRa Server)
+      //  payload: Buffer.from("1E").toString("base64"), // base64 encoded data (plaintext, will be encrypted by LoRa Server)
+        //payload_raw: Buffer.from("1E").toString("base64"), // base64 encoded data (plaintext, will be encrypted by LoRa Server)
+        frm_payload: Buffer.from("1E").toString("base64"), // base64 encoded data (plaintext, will be encrypted by LoRa Server)
+       // "dev_id": "ittinademo",  
+      });
+
+       /* client.publish("v3/watermeter@cybereye/devices/ittinademo/down/push",pm,options,(err,res) => {
+          console.log(res);
+          });*/
+
+
+
+
+       /* client.publish('#',pm,{},(err,res) => {
+             console.log(res);
+         })*/
+
+})  
 
   //handle incoming messages
 client.on('message',function(topic, message, packet){

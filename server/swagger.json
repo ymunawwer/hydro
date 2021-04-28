@@ -203,7 +203,7 @@
                 }
             }
         },
-        "/saveDevice    ": {
+        "/saveDevice": {
             "post": {
                 "tags": [
                     "SERVICES"
@@ -217,6 +217,36 @@
                         "description": "Service to get the meter Readings",
                         "schema": {
                             "$ref": "#/definitions/saveDevice"
+                        }
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/registerTicket": {
+            "post": {
+                "tags": [
+                    "SERVICES"
+                ],
+                "description": "registerTicket",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": "true",
+                        "description": "Service to get the meter Readings",
+                        "schema": {
+                            "$ref": "#/definitions/registerTicket"
                         }
                     }
                 ],
@@ -258,6 +288,25 @@
                     "SERVICES"
                 ],
                 "description": "last 24 hrs consumption",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/getAllTickets": {
+            "get": {
+                "tags": [
+                    "SERVICES"
+                ],
+                "description": "getAllTickets",
                 "consumes": [
                     "application/json"
                 ],
@@ -520,6 +569,23 @@
                 "dataTransmissionTime":{
                     "type": "string",
                     "example": "weekly"                
+                }
+            }
+        },
+        "registerTicket": {
+            "type": "object",
+            "properties": {
+                "issue":{
+                    "type": "string",
+                    "example": "water leakage"                
+                },
+                "desc":{
+                    "type": "string",
+                    "example": "There is a water leakage in my device.Please check."                
+                },
+                "deviceId":{
+                    "type": "string",
+                    "example": "ittinademo"                
                 }
             }
         }

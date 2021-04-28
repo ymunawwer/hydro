@@ -13,7 +13,7 @@ exports.getMeterReadings = async ({ fromDate,toDate,readingRange}) => {
 
     let formattedFromDate = moment(fromDate,"DD/MM/YYYY").toDate();
     let formattedToDate = moment(toDate,"DD/MM/YYYY").endOf('day').toDate();
-    let availableDevices = ["officemeter","soham-demo","ittinademo"];
+    let availableDevices = ["officemeter","soham-demo","ittinademo","ttntest"];
 
 
     let readingsAggregator = [],matchCriteria = {};
@@ -102,7 +102,8 @@ exports.getMeterReadings = async ({ fromDate,toDate,readingRange}) => {
     let  defaultReadings = {
             "officemeter" : 0,
             "ittinademo" : 0,
-            "soham-demo" : 0
+            "soham-demo" : 0,
+            "ttntest" : 0
         }
     for(let message of readings){
         for(let dailyConsumption of message.readings){
@@ -226,7 +227,7 @@ exports.getMeterReadings = async ({ fromDate,toDate,readingRange}) => {
         meterReadings.sort((reading1,reading2) => moment(reading1.date).diff(moment(reading2.date)))
     }
     //sort monthly readings
-    if(Object.keys(dailyReadings).length > 0){
+    if(Object.keys(monthlyReadings).length > 0){
         meterReadings.sort((reading1,reading2) => moment(reading1.month,'MMM').diff(moment(reading2.month,'MMM')))
     }
 
@@ -362,7 +363,7 @@ exports.saveDevice = async ({device}) => {
             let formattedFromDate = moment.utc().subtract(26,'hours').toDate();
             let formattedToDate = moment.utc().toDate();
             let readings = await  meterDataModel.find(
-                {device:{ $in: ["ittinademo", "officemeter", "soham-demo"]},
+                {device:{ $in: ["ittinademo", "officemeter", "soham-demo","ttntest"]},
                 dateTime: {
                  $gte:formattedFromDate,
                  $lte:formattedToDate
@@ -372,6 +373,7 @@ exports.saveDevice = async ({device}) => {
                     "ittinademo":[],
                     "officemeter":[],
                     "soham-demo":[],
+                    "ttntest":[],
                 };
 
                 for(let i = 0; i< readings.length-1;i++){
@@ -589,6 +591,15 @@ exports.interpretMeterMessage = async ({message}) => {
               
              
             }
+          }
+          else{
+              
+            if(decodedPayload.indexOf('Leak') > -1){
+
+                //sendNotification();
+                //downLinkValveClose();
+            }
+
           }
          }
 
