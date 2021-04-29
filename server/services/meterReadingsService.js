@@ -503,7 +503,17 @@ exports.interpretMeterMessage = async ({message}) => {
                         device
                     };
                     dateTimeReadings.push(dateTimeCutOffReading);
-                    
+
+                    //end of prev day at 11:59
+                    let prevEndOfDay = moment(dateTime).clone().endOf('day');
+
+                    dateTimeReadings.push({
+                        dateTime : prevEndOfDay.toDate(),
+                        reading:parseFloat(cutOffReading),
+                        device
+                    });
+
+                    //current                     
                     let dateTimeReading = {
                         dateTime : dateTime,
                         reading:parseFloat(currentReading),
