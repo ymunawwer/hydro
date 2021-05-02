@@ -263,6 +263,36 @@
                 }
             }
         },
+        "/updateTicket": {
+            "post": {
+                "tags": [
+                    "SERVICES"
+                ],
+                "description": "updateTicket",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": "true",
+                        "description": "Service to get the meter Readings",
+                        "schema": {
+                            "$ref": "#/definitions/updateTicket"
+                        }
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
         "/getLatestMeterReading": {
             "get": {
                 "tags": [
@@ -586,6 +616,19 @@
                 "deviceId":{
                     "type": "string",
                     "example": "ittinademo"                
+                }
+            }
+        },
+        "updateTicket": {
+            "type": "object",
+            "properties": {
+                "status":{
+                    "type": "string",
+                    "example": "Resolved"                
+                },
+                "ticketId":{
+                    "type": "string",
+                    "example": "608711879228f2245813864e"                
                 }
             }
         }

@@ -1,4 +1,5 @@
 const ticketsModel = require("../models/tickets");
+const mongoose = require('mongoose');
 
    
 exports.registerTicket = async ({ticket}) => {
@@ -31,7 +32,7 @@ exports.updateTicket = async ({ticketId,status}) => {
 
     
     try {
-        const tickets = await new ticketsModel.update({id:ticketId},
+        const tickets = await ticketsModel.updateOne({_id:mongoose.Types.ObjectId(ticketId)},
             {status});
         return { success: true ,tickets};
     }

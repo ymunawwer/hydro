@@ -5,6 +5,7 @@ const ticketsService = require("../services/ticketsService");
 exports.registerTicket = async (req, res) => {
  
   let ticket = req.body;
+  ticket.status = 'New';
   //const {fromDate,toDate,readingRange} = req.body;
    let status = await  ticketsService.registerTicket({ticket});
   
@@ -23,8 +24,8 @@ exports.getAllTickets = async (req, res) => {
 
 exports.updateTicket = async (req, res) => {
 
-  let {status} = req.body;
-  let response = await  ticketsService.updateTicket({status});
+  let {status,ticketId} = req.body;
+  let response = await  ticketsService.updateTicket({ticketId,status});
 
   res.json(response);
 
