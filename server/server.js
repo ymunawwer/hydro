@@ -14,6 +14,7 @@ const swaggerUi = require('swagger-ui-express'),
  swaggerDocument = require('./swagger.json');
 var logger = require('morgan');
 var mqtt=require('mqtt');
+const moment = require('moment');
 var meterReadingService =require('./services/meterReadingsService');
 var serviceHelper = require('./helper/serviceHelper');
 
@@ -102,7 +103,8 @@ client = mqtt.connect("mqtt://eu1.cloud.thethings.industries:1883",
        // "dev_id": "ittinademo",  
       });
 
-       /* client.publish("v3/watermeter@cybereye/devices/ittinademo/down/push",pm,options,(err,res) => {
+        //client.publish("v3/watermeter@cybereye/devices/ittinademo/down/push",pm,options,(err,res) => {
+       /*   client.publish("v3/watermeter@cybereye/devices/ittinademo/up",pm,options,(err,res) => {
           console.log(res);
           });*/
 
@@ -127,7 +129,7 @@ client.on('message',function(topic, message, packet){
 
 
   // read data 
-  meterReadingService.interpretMeterMessage({message});
+  meterReadingService.interpretMeterMessage({message,timestamp:moment()});
   
 });
 

@@ -7,7 +7,6 @@ const fs = require('fs');
 const path = require('path');
 const lineReader = require('line-reader');
 const serviceHelper = require('../helper/serviceHelper');
-const { ResumeToken } = require("mongodb");
 
 exports.getMeterReadings = async ({ fromDate,toDate,readingRange}) => {
 
@@ -338,7 +337,8 @@ exports.saveDevice = async ({device}) => {
                     if(message && message.uplink_message){
                       decodedPayload = base64decode(message.uplink_message.frm_payload);
                     }
-                    decodedPayloads[message.received_at] = {
+                   // decodedPayloads[message.received_at] = {
+                        decodedPayloads[reading._id.getTimestamp()] = {
                         decodedPayload,
                         device:message.end_device_ids.device_id,
                         topic:message.topic,
@@ -431,12 +431,13 @@ exports.interpretMeterReadings = async () => {
         let readings = await  readingsModel.find().sort({_id:1});
         
             for(let reading of readings){
-                console.log(reading);
+                console.log(reading);  
+                //reading._id.getTimestamp()
                 let message  = JSON.parse(reading.message);
 
                  // read data 
 
-                await  exports.interpretMeterMessage({message});
+                await  exports.interpretMeterMessage({message,timestamp:moment(reading._id.getTimestamp())});
       
       }
 
@@ -457,11 +458,17 @@ const getMinutes = (time) => {
 }
 
 
-exports.interpretMeterMessage = async ({message}) => {
+exports.interpretMeterMessage = async ({message,timestamp}) => {
 
 
     let decodedPayload = "",totalReading=0, utcDate = moment.utc(message.received_at),
-            formattedReceivedDate = moment.utc(message.received_at).format('YYYY-MM-DD HH:mm'); //timezone issues with 'Z' format
+            //formattedReceivedDate = moment.utc(message.received_at).format('YYYY-MM-DD HH:mm'); //timezone issues with 'Z' format
+            formattedReceivedDate = timestamp;
+            if(timestamp){
+                formattedReceivedDate = timestamp;
+            }else{
+                formattedReceivedDate = moment.utc(message.received_at).format('YYYY-MM-DD HH:mm'); //timezone issues with 'Z' format
+            }
       if(message.uplink_message){
         decodedPayload = base64decode(message.uplink_message.frm_payload);
         if(['C2N','Leak'].indexOf(decodedPayload) === -1){
@@ -603,11 +610,13 @@ exports.interpretMeterMessage = async ({message}) => {
             }
           }
           else{
-              
+              return;
             if(decodedPayload.indexOf('Leak') > -1){
 
                 //sendNotification();
                 //downLinkValveClose();
+               let response = await serviceHelper.sendNotification();
+               return response;
             }
 
           }
