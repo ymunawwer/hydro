@@ -123,8 +123,8 @@ exports.getMeterReadings = async ({ fromDate,toDate,readingRange}) => {
                     let consumption  = dailyConsumption.consumption * 10; // diff. *10
                     //round off to two decimals 
                     consumption = Math.round(consumption * 100)/100;
-                    let netConsumption = weeklyReadings[week][message._id] = consumption;
-                    weeklyReadings[week][message._id] += netConsumption;
+                   // let netConsumption = weeklyReadings[week][message._id] = consumption;
+                    weeklyReadings[week][message._id] += consumption;
                 }
             }else{
                 weeklyReadings[week] = JSON.parse(JSON.stringify(defaultReadings));
