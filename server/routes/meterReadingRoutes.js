@@ -22,4 +22,6 @@ app.get("/sendMail", meterReadingsController.sendMail);
 
 app.get("/interpretMeterReadings", meterReadingsController.interpretMeterReadings);
 
+app.get("/restoreFromLogs", meterReadingsController.restoreFromLogs);
+
 module.exports = app;

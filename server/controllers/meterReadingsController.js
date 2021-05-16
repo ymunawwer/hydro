@@ -94,5 +94,13 @@ exports.interpretMeterReadings = async (req, res) => {
 
 }
 
+exports.restoreFromLogs = async (req, res) => {
+     
+    //const {fromDate,toDate,readingRange} = req.body;
+     let data = await  meterReadingsService.restoreFromLogs();
+    
+     res.json({success:true});
+
+}
 
 module.exports = exports;

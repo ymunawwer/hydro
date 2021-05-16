@@ -104,7 +104,7 @@ client = mqtt.connect("mqtt://eu1.cloud.thethings.industries:1883",
       });
 
         //client.publish("v3/watermeter@cybereye/devices/ittinademo/down/push",pm,options,(err,res) => {
-       /*   client.publish("v3/watermeter@cybereye/devices/ittinademo/up",pm,options,(err,res) => {
+          /*client.publish("v3/watermeter@cybereye/devices/ittinademo/down",pm,options,(err,res) => {
           console.log(res);
           });*/
 
@@ -125,7 +125,7 @@ client.on('message',function(topic, message, packet){
   serviceHelper.logWriter(JSON.stringify(data),'messages','logs',true);
    message  = JSON.parse(message.toString());
       let device = message.end_device_ids.device_id;
-  meterReadingService.saveReading({message,topic,device});
+  meterReadingService.saveReading({message,topic,device,receivedAt:moment()});
 
 
   // read data 

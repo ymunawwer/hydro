@@ -11,7 +11,9 @@ const serviceHelper = require('../helper/serviceHelper');
 exports.getMeterReadings = async ({ fromDate,toDate,readingRange}) => {
 
     let formattedFromDate = moment(fromDate,"DD/MM/YYYY").toDate();
+   // let formattedFromDate = moment.utc(fromDate,"DD/MM/YYYY").toDate();
     let formattedToDate = moment(toDate,"DD/MM/YYYY").endOf('day').toDate();
+    //let formattedToDate = moment.utc(toDate,"DD/MM/YYYY").endOf('day').toDate();
     let availableDevices = ["officemeter","soham-demo","ittinademo","ttntest"];
 
 
@@ -45,8 +47,8 @@ exports.getMeterReadings = async ({ fromDate,toDate,readingRange}) => {
             _id:{
                 device:"$device",
              date:{$dateToString: {
-              //  format: "%Y-%m-%d", date: "$dateTime" ,timezone: "+05:30"
-                format: "%Y-%m-%d", date: "$dateTime" 
+                format: "%Y-%m-%d", date: "$dateTime" ,timezone: "+05:30"
+              //  format: "%Y-%m-%d", date: "$dateTime" 
               }}
             },      
         maxValue : {$max : "$reading"} , 
@@ -266,11 +268,12 @@ exports.getLatestMeterReading = async () => {
 
 }
 
-exports.saveReading = async ({message,topic,device}) => {
+exports.saveReading = async ({message,topic,device,receivedAt}) => {
 
     let reading = {
         message:JSON.stringify(message),
-        receivedAt:new Date(message.received_at),
+     //   receivedAt:new Date(message.received_at),
+        receivedAt,
         topic,
         device        
     }
@@ -328,7 +331,8 @@ exports.saveDevice = async ({device}) => {
       exports.getLatestDecodedPayloads = async () => {
         try {
             let decodedPayloads = {};
-            let readings = await  readingsModel.find().sort({_id:-1});
+           // let readings = await  readingsModel.find().sort({_id:-1});
+            let readings = await  readingsModel.find().sort({receivedAt:-1});
             
                 for(let reading of readings){
                     console.log(reading);
@@ -338,7 +342,8 @@ exports.saveDevice = async ({device}) => {
                       decodedPayload = base64decode(message.uplink_message.frm_payload);
                     }
                    // decodedPayloads[message.received_at] = {
-                        decodedPayloads[reading._id.getTimestamp()] = {
+                    //    decodedPayloads[reading._id.getTimestamp()] = {
+                        decodedPayloads[reading.receivedAt] = {
                         decodedPayload,
                         device:message.end_device_ids.device_id,
                         topic:message.topic,
@@ -437,7 +442,8 @@ exports.interpretMeterReadings = async () => {
 
                  // read data 
 
-                await  exports.interpretMeterMessage({message,timestamp:moment(reading._id.getTimestamp())});
+               // await  exports.interpretMeterMessage({message,timestamp:moment(reading._id.getTimestamp())});
+                await  exports.interpretMeterMessage({message,timestamp:moment(reading.receivedAt)});
       
       }
 
@@ -459,7 +465,6 @@ const getMinutes = (time) => {
 
 
 exports.interpretMeterMessage = async ({message,timestamp}) => {
-
 
     let decodedPayload = "",totalReading=0, utcDate = moment.utc(message.received_at),
             //formattedReceivedDate = moment.utc(message.received_at).format('YYYY-MM-DD HH:mm'); //timezone issues with 'Z' format
@@ -623,3 +628,71 @@ exports.interpretMeterMessage = async ({message,timestamp}) => {
          }
 
 }
+
+
+exports.restoreFromLogs = () => {
+
+    try{
+       /*    let fileLoc = path.join(__dirname, "../../messages.log");
+           var data = fs.readFileSync(fileLoc, 'utf8');
+        const stats = fs.statSync(fileLoc);
+        console.log(data);
+        console.log(JSON.parse(data));
+        data = JSON.parse(data);
+        let {message} = data;
+        console.log(message);
+        console.log(stats.mtime);*/
+
+        //let dirLoc = path.join(__dirname, "../../test");
+        let dirLoc = path.join(__dirname, "../../prod backup");
+        let dirs = getDirectoriesRecursive(dirLoc);
+
+        dirs = dirs.filter(dir => dir.indexOf('logs') > -1); // writing our logs to logs folder
+
+        for(let loc of dirs){
+            let logFile = `${loc}\\messages.log`;
+            var data = fs.readFileSync(logFile, 'utf8');
+            const stats = fs.statSync(logFile);
+           // console.log(data);
+            try{
+               // console.log(JSON.parse(data));
+                 data = JSON.parse(data);
+             }catch(err){
+                continue;
+            }
+            let {message,topic} = data;
+            //console.log(message);
+            //console.log(stats.mtime);
+
+            if(message.end_device_ids){
+              exports.saveReading({message,topic,device:message.end_device_ids.device_id,receivedAt:moment(stats.mtime)});
+              exports.interpretMeterMessage({message,timestamp:moment(stats.mtime)});
+            }
+}
+
+      //  console.log(dirs);
+
+    }
+    catch(err){
+        console.log(err);
+    }
+    
+  //exports.saveReading({message,topic,device,receivedAt:moment()});
+
+}
+
+// directories related
+
+function flatten(lists) {
+    return lists.reduce((a, b) => a.concat(b), []);
+  }
+  
+  function getDirectories(srcpath) {
+    return fs.readdirSync(srcpath)
+      .map(file => path.join(srcpath, file))
+      .filter(path => fs.statSync(path).isDirectory());
+  }
+  
+  function getDirectoriesRecursive(srcpath) {
+    return [srcpath, ...flatten(getDirectories(srcpath).map(getDirectoriesRecursive))];
+  }
